@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F6F6F6"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.hyphenate.easeui.widget.EaseTitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/em_common_title_bar_height"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleBarTitle="聊信号安全"
+        android:background="@color/white"
+        app:titleBarDisplayHomeAsUpEnabled="true"/>
+
+
+    <com.hyphenate.liaoxin.common.widget.ArrowItemView
+        android:id="@+id/item_num"
+        android:layout_width="0dp"
+        android:layout_height="53dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_bar"
+        app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
+        app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
+        app:arrowItemTitle="聊信号"
+        app:arrowItemContent="123"
+        app:arrowItemTitleColor="#1F242E"
+        app:arrowItemTitleSize="17dp"
+        android:foreground="@drawable/demo_ripple_click_gray"
+        app:arrowItemShowArrow="false"
+        app:arrowItemShowDivider="true"
+        android:background="@color/white"/>
+
+    <com.hyphenate.liaoxin.common.widget.ArrowItemView
+        android:id="@+id/item_phone"
+        android:layout_width="0dp"
+        android:layout_height="53dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_num"
+        app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
+        app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
+        app:arrowItemTitle="绑定手机号"
+        app:arrowItemContent="123"
+        app:arrowItemTitleColor="#1F242E"
+        app:arrowItemTitleSize="17dp"
+        android:foreground="@drawable/demo_ripple_click_gray"
+        app:arrowItemShowArrow="true"
+        app:arrowItemShowDivider="false"
+        android:background="@color/white"/>
+
+    <com.hyphenate.liaoxin.common.widget.ArrowItemView
+        android:id="@+id/item_change_password"
+        android:layout_width="0dp"
+        android:layout_height="53dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_phone"
+        app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
+        app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
+        android:layout_marginTop="10dp"
+        app:arrowItemTitle="修改登录密码"
+        app:arrowItemTitleColor="#1F242E"
+        app:arrowItemTitleSize="17dp"
+        android:foreground="@drawable/demo_ripple_click_gray"
+        app:arrowItemShowArrow="true"
+        app:arrowItemShowDivider="false"
+        android:background="@color/white"/>
+
+    <com.hyphenate.liaoxin.common.widget.ArrowItemView
+        android:id="@+id/item_equipments"
+        android:layout_width="0dp"
+        android:layout_height="53dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_change_password"
+        app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
+        app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
+        android:layout_marginTop="10dp"
+        app:arrowItemTitle="我的设备管理"
+        app:arrowItemTitleSize="17dp"
+        app:arrowItemTitleColor="#1F242E"
+        android:foreground="@drawable/demo_ripple_click_gray"
+        app:arrowItemShowDivider="false"
+        android:background="@color/white"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
