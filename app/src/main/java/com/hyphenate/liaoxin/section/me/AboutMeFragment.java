@@ -23,6 +23,7 @@ import com.hyphenate.liaoxin.section.login.activity.LoginActivity;
 import com.hyphenate.liaoxin.section.me.activity.AboutHxActivity;
 import com.hyphenate.liaoxin.section.me.activity.DeveloperSetActivity;
 import com.hyphenate.liaoxin.section.me.activity.FeedbackActivity;
+import com.hyphenate.liaoxin.section.me.activity.PayActivity;
 import com.hyphenate.liaoxin.section.me.activity.SetIndexActivity;
 import com.hyphenate.liaoxin.section.me.activity.UserDetailActivity;
 import com.hyphenate.easeui.model.EaseEvent;
@@ -104,7 +105,7 @@ public class AboutMeFragment extends BaseInitFragment implements View.OnClickLis
                 DeveloperSetActivity.actionStart(mContext);
                 break;
             case R.id.item_common_pay://支付
-
+                PayActivity.actionStart(mContext);
                 break;
             case R.id.item_common_team://聊信团队
 

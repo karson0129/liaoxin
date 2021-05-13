@@ -18,8 +18,10 @@ public abstract class ResultCallBack implements LiaoxinCallBack {
 
     @Override
     public void onFailure(Call call, IOException e) {
-        if (e instanceof SocketTimeoutException){
-            ToastUtils.showFailToast("请求超时");
+        if (e != null) {
+            if (e instanceof SocketTimeoutException) {
+                ToastUtils.showFailToast("请求超时");
+            }
         }
     }
 }

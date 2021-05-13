@@ -3,14 +3,30 @@ package com.hyphenate.liaoxin.section.me.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
+import com.google.gson.Gson;
 import com.hyphenate.liaoxin.R;
+import com.hyphenate.liaoxin.common.net.bean.BaseRequestBean;
+import com.hyphenate.liaoxin.common.net.bean.RegisterBean;
+import com.hyphenate.liaoxin.common.net.callback.ResultCallBack;
+import com.hyphenate.liaoxin.common.net.client.HttpURL;
+import com.hyphenate.liaoxin.common.net.client.HttpUtils;
+import com.hyphenate.liaoxin.common.net.client.JsonUitls;
 import com.hyphenate.liaoxin.common.widget.ArrowItemView;
 import com.hyphenate.liaoxin.section.base.BaseInitActivity;
 import com.hyphenate.easeui.widget.EaseTitleBar;
 
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Response;
+
 public class AccountSecurityActivity extends BaseInitActivity implements EaseTitleBar.OnBackPressListener, View.OnClickListener {
+
+    private String TAG = "AccountSecurityActivity";
+
     private EaseTitleBar titleBar;
     private ArrowItemView itemEquipments;
     private ArrowItemView itemNum;
@@ -66,6 +82,29 @@ public class AccountSecurityActivity extends BaseInitActivity implements EaseTit
                 break;
             case R.id.item_num:
 
+                RegisterBean bean = new RegisterBean();
+                bean.telephone = "13611414277";
+                bean.code = "1234";
+                bean.nickName = "haha";
+                bean.password = "12345678";
+                Log.i(TAG,"参数："+ new Gson().toJson(bean));
+                HttpUtils.getInstance().post(HttpURL.RESGIER_CLIENT, new Gson().toJson(bean), new ResultCallBack() {
+                    @Override
+                    public void onSuccessResponse(Call call, Response response) {
+                        super.onSuccessResponse(call, response);
+                        try {
+                            Log.i(TAG,"成功："+response.body().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        super.onFailure(call, e);
+                        Log.i(TAG,"失败："+ e.toString());
+                    }
+                });
                 break;
             case R.id.item_phone://绑定手机号
 

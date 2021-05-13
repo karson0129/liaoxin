@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+
+    <com.hyphenate.easeui.widget.EaseTitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/em_common_title_bar_height"
+        app:titleBarTitle="提现"
+        android:background="@color/white"
+        app:titleBarDisplayHomeAsUpEnabled="true"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:background="#F5F5F5">
+
+    </View>
+
+    <LinearLayout
+        android:id="@+id/selected"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="提现至"
+            android:textSize="15dp"
+            android:textColor="#292929"
+            android:layout_marginLeft="20dp"
+            >
+
+        </TextView>
+
+        <ImageView
+            android:id="@+id/iv_bank"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:background="@drawable/shape_0189ff_4dp"
+            android:layout_marginLeft="46dp">
+
+        </ImageView>
+
+        <TextView
+            android:id="@+id/tv_bank"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="建设银行（4370）"
+            android:textColor="#292929"
+            android:textSize="17dp"
+            android:layout_marginLeft="11dp"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            >
+
+        </TextView>
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/shape_0189ff_4dp"
+            >
+
+        </ImageView>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#F5F5F5">
+
+    </View>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="提现金额（元）"
+        android:textSize="15dp"
+        android:textColor="#292929"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        >
+
+    </TextView>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center_vertical"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="￥"
+            android:textColor="#292929"
+            android:textSize="32dp"
+            android:textStyle="bold"
+            >
+
+        </TextView>
+
+        <EditText
+            android:id="@+id/et_pay"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:textSize="40dp"
+            android:textColor="#292929"
+            android:paddingLeft="16dp"
+            android:text="123"
+            android:textStyle="bold"
+            >
+
+        </EditText>
+
+    </LinearLayout>
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#F2F2F2"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+    </View>
+
+    <TextView
+        android:id="@+id/tv_yue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="当前零钱余额3849.04元"
+        android:layout_marginLeft="20dp"
+        android:textSize="13dp"
+        android:layout_marginTop="13dp"
+        >
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/btn_login"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:textColor="#AAAAAA"
+        android:textSize="16dp"
+        android:gravity="center"
+        android:text="提现"
+        android:layout_marginTop="78dp"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@drawable/shape_ride_8_f2f2f2"
+        />
+
+</LinearLayout>

@@ -538,6 +538,10 @@
         <activity android:name=".section.login.activity.SetPasswordActivity"></activity>
         <!-- 设置昵称       -->
         <activity android:name=".section.login.activity.SetNicknameActivity"></activity>
+        <!-- 支付       -->
+        <activity android:name=".section.me.activity.PayActivity"></activity>
+        <!--  提现      -->
+        <activity android:name=".section.me.activity.WithdrawActivity"></activity>
     </application>
 
 </manifest>

@@ -26,17 +26,17 @@ public class HttpUtils {
 
     private static HttpUtils utils;
 
-    private MediaType mediaType = MediaType.parse("text/x-markdown; charset=utf-8");
+    private MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
 
-    private OkHttpClient client;
+    private static OkHttpClient client;
 
     private HttpUtils(){
         initClient();
     }
 
-    public HttpUtils getInstance(){
+    public static HttpUtils getInstance(){
         if (utils == null){
-            synchronized (this){
+            synchronized (HttpUtils.class){
                 if (utils == null){
                     utils = new HttpUtils();
                 }
@@ -84,14 +84,25 @@ public class HttpUtils {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) {
                 Log.d(TAG, response.protocol() + " " +response.code() + " " + response.message());
                 Headers headers = response.headers();
                 for (int i = 0; i < headers.size(); i++) {
                     Log.d(TAG, headers.name(i) + ":" + headers.value(i));
                 }
-                Log.d(TAG, "onResponse: " + response.body().string());
-                callBack.onSuccessResponse(call,response);
+                try {
+                    Log.d(TAG, "onResponse: " + response.body().string());
+
+                    if (response.code() == 200){
+                        callBack.onSuccessResponse(call,response);
+                    }else {
+                        callBack.onFailure(call,null);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+//                onResponse: {"type":"https://tools.ietf.org/html/rfc7231#section-6.5.13","title":"Unsupported Media Type"
+//                ,"status":415,"traceId":"|ef8ac498-491cc690bcfb4685."}
             }
         });
     }
