@@ -5,15 +5,41 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.lifecycle.ViewModelProvider;
+
+import com.google.gson.Gson;
+import com.hyphenate.EMError;
+import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.utils.EaseEditTextUtils;
 import com.hyphenate.easeui.widget.EaseTitleBar;
+import com.hyphenate.liaoxin.DemoHelper;
+import com.hyphenate.liaoxin.MainActivity;
 import com.hyphenate.liaoxin.R;
+import com.hyphenate.liaoxin.common.constant.UserConstant;
+import com.hyphenate.liaoxin.common.db.PrefUtils;
+import com.hyphenate.liaoxin.common.interfaceOrImplement.OnResourceParseCallback;
+import com.hyphenate.liaoxin.common.net.bean.RegisterBean;
+import com.hyphenate.liaoxin.common.net.callback.ResultCallBack;
+import com.hyphenate.liaoxin.common.net.client.HttpURL;
+import com.hyphenate.liaoxin.common.net.client.HttpUtils;
+import com.hyphenate.liaoxin.common.net.request.BaseRequest;
+import com.hyphenate.liaoxin.common.net.request.SendCodeRequest;
+import com.hyphenate.liaoxin.common.utils.ToastUtils;
 import com.hyphenate.liaoxin.section.base.BaseInitActivity;
+import com.hyphenate.liaoxin.section.login.viewmodels.LoginFragmentViewModel;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * 设置昵称
@@ -22,17 +48,23 @@ public class SetNicknameActivity extends BaseInitActivity implements EaseTitleBa
 
     private String TAG = "SetNicknameActivity";
 
+    private static String Request = "Request";
+
+    private LoginFragmentViewModel mFragmentViewModel;
+
     private EaseTitleBar mToolbarRegister;
     private EditText etLoginPassword;
     private TextView btnLogin;
     private TextView tvTitle;
+    private Drawable clear;
 
-    private String mPassword;
-    private Drawable eyeClose;
-    private Drawable eyeOpen;
+    private String mNickName;
 
-    public static void startAction(Context context) {
+    private RegisterBean request;
+
+    public static void startAction(Context context,RegisterBean request) {
         Intent intent = new Intent(context, SetNicknameActivity.class);
+        intent.putExtra(Request,request);
         context.startActivity(intent);
     }
 
@@ -44,6 +76,7 @@ public class SetNicknameActivity extends BaseInitActivity implements EaseTitleBa
     @Override
     protected void initIntent(Intent intent) {
         super.initIntent(intent);
+        request = (RegisterBean) intent.getSerializableExtra(Request);
     }
 
     @Override
@@ -52,10 +85,11 @@ public class SetNicknameActivity extends BaseInitActivity implements EaseTitleBa
         mToolbarRegister = findViewById(R.id.toolbar_register);
         etLoginPassword = findViewById(R.id.et_login_password);
         btnLogin = findViewById(R.id.btn_login);
-        tvTitle = findViewById(R.id.title);
+        tvTitle = findViewById(R.id.tvTitle);
         tvTitle.setText("设置昵称");
         etLoginPassword.setHint("请输入昵称");
         btnLogin.setText("完成");
+        etLoginPassword.setInputType(EditorInfo.TYPE_CLASS_TEXT);
     }
 
 
@@ -76,24 +110,60 @@ public class SetNicknameActivity extends BaseInitActivity implements EaseTitleBa
 
             @Override
             public void afterTextChanged(Editable s) {
-                mPassword = etLoginPassword.getText().toString().trim();
-                checkEditContent();
+                mNickName = etLoginPassword.getText().toString().trim();
+                EaseEditTextUtils.showRightDrawable(etLoginPassword, clear);
             }
         });
         btnLogin.setOnClickListener(this);
+        EaseEditTextUtils.clearEditTextListener(etLoginPassword);
     }
 
-    private void checkEditContent() {
-        EaseEditTextUtils.showRightDrawable(etLoginPassword, eyeClose);
-    }
 
     @Override
     protected void initData() {
         super.initData();
-        eyeClose = getResources().getDrawable(R.drawable.d_pwd_hide);
-        eyeOpen = getResources().getDrawable(R.drawable.d_pwd_show);
-        EaseEditTextUtils.changePwdDrawableRight(etLoginPassword, eyeClose, eyeOpen, null, null, null);
+        clear = getResources().getDrawable(R.drawable.d_clear);
+        EaseEditTextUtils.showRightDrawable(etLoginPassword, clear);
+
+        mFragmentViewModel = new ViewModelProvider(this).get(LoginFragmentViewModel.class);
+        mFragmentViewModel.getLoginObservable().observe(this, response -> {
+            parseResource(response, new OnResourceParseCallback<EaseUser>(true) {
+                @Override
+                public void onSuccess(EaseUser data) {
+                    Log.e("login", "login success");
+                    DemoHelper.getInstance().setAutoLogin(true);
+                    //跳转到主页
+                    MainActivity.startAction(mContext);
+                    mContext.finish();
+                }
+
+                @Override
+                public void onError(int code, String message) {
+                    super.onError(code, message);
+                    if(code == EMError.USER_AUTHENTICATION_FAILED) {
+                        ToastUtils.showToast(R.string.demo_error_user_authentication_failed);
+                    }else {
+                        ToastUtils.showToast(message);
+                    }
+                }
+
+                @Override
+                public void onLoading(EaseUser data) {
+                    super.onLoading(data);
+                    showLoading();
+                }
+
+                @Override
+                public void hideLoading() {
+                    super.hideLoading();
+                    dismissLoading();
+
+                }
+            });
+
+        });
     }
+
 
     @Override
     public void onBackPress(View view) {
@@ -104,9 +174,60 @@ public class SetNicknameActivity extends BaseInitActivity implements EaseTitleBa
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_login:
-
+                if (!TextUtils.isEmpty(mNickName)){
+                    getRegister();
+                }
                 break;
         }
+    }
+
+    /**
+     * 获取验证码
+     */
+    private void getRegister(){
+        request.nickName = mNickName;
+        Log.i(TAG,"参数："+ new Gson().toJson(request));
+        HttpUtils.getInstance().post(HttpURL.RESGIER_CLIENT, new Gson().toJson(request), new ResultCallBack() {
+
+            @Override
+            public void onSuccessResponse(Call call, Response response, String str) {
+                Log.d(TAG,"成功："+ str);
+//                onResponse: {"resultType":"object","modelType":null,"data":"d7ec89d18e39348b48cf75e5579030c8","returnCode":0,"message":"OK","action":null}
+                try {
+                    BaseRequest<String> sendCodeRequest = new Gson().fromJson(str,BaseRequest.class);
+                    if (!TextUtils.isEmpty(sendCodeRequest.data)){
+                        PrefUtils.setString(mContext, UserConstant.Token,sendCodeRequest.data);
+                    }
+                }catch (Exception e){
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                super.onFailure(call, e);
+                Log.d(TAG,"失败："+ e.toString());
+            }
+        });
+    }
+
+    /**
+     * 获取当前登录用户
+     * */
+    private void getUserInfo(){
+        HttpUtils.getInstance().post(HttpURL.GET_CURRENT_CLIENT, "", new ResultCallBack() {
+
+            @Override
+            public void onSuccessResponse(Call call, Response response, String str) {
+                Log.d(TAG,"成功："+ str);
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                super.onFailure(call, e);
+                Log.d(TAG,"失败："+ e.toString());
+            }
+        });
     }
 
 }

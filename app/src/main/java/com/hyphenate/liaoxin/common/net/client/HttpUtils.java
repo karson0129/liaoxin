@@ -1,9 +1,15 @@
 package com.hyphenate.liaoxin.common.net.client;
 
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.hyphenate.liaoxin.DemoApplication;
+import com.hyphenate.liaoxin.common.constant.UserConstant;
+import com.hyphenate.liaoxin.common.db.PrefUtils;
 import com.hyphenate.liaoxin.common.net.callback.ResultCallBack;
 import com.hyphenate.liaoxin.common.net.interceptor.LoggingInterceptor;
+import com.hyphenate.liaoxin.common.net.request.BaseRequest;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,21 +57,23 @@ public class HttpUtils {
                 .readTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(20, TimeUnit.SECONDS)
                 .addInterceptor(new LoggingInterceptor())
-//                .addInterceptor(new Interceptor() {
-//                    @Override
-//                    public Response intercept(Chain chain) throws IOException {
-//                            Request request = chain.request()
-//                                    .newBuilder()
-//                                    .addHeader("Authorization", "{timestamp:"+ time +",token:'"+ token +"',uid:"+ uid +"}")
-//                                    .addHeader("version","Android/"+ BanbenUtils.getSystemModel()+
-//                                            "/"+BanbenUtils.getVersionCode(CommunityApplication.getContext()))
-//                                    .addHeader("device_id",BanbenUtils.getIMEI(CommunityApplication.getContext()))
-////                                    .addHeader("X_COMAPP_PRODUCTION","0") //测试不传 预发布0 正式1
-//                                    .build();
-////                            Log.i("result", "imei: "+BanbenUtils.getIMEI(CommunityApplication.getContext()));
-//                            return chain.proceed(request);
-//                    }
-//                })
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+
+                        if ( !TextUtils.isEmpty(PrefUtils.getString(DemoApplication.getInstance(), UserConstant.Token,"")) ){
+                            Request request = chain.request()
+                                    .newBuilder()
+                                    .addHeader("token",PrefUtils.getString(DemoApplication.getInstance(), UserConstant.Token,""))
+                                    .build();
+                            return chain.proceed(request);
+                        }else {
+                            Request request = chain.request();
+                            Response response = chain.proceed(request);
+                            return response;
+                        }
+                    }
+                })
                 .retryOnConnectionFailure(false)
                 .build();
     }
@@ -91,18 +99,18 @@ public class HttpUtils {
                     Log.d(TAG, headers.name(i) + ":" + headers.value(i));
                 }
                 try {
-                    Log.d(TAG, "onResponse: " + response.body().string());
+                    String str = response.body().string();
+                    Log.d(TAG, "onResponse: " + str);
+                    BaseRequest request1 = new Gson().fromJson(str,BaseRequest.class);
 
-                    if (response.code() == 200){
-                        callBack.onSuccessResponse(call,response);
+                    if (request1 != null && request1.returnCode == 0 && response.code() == 200){
+                        callBack.onSuccessResponse(call,response,str);
                     }else {
                         callBack.onFailure(call,null);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-//                onResponse: {"type":"https://tools.ietf.org/html/rfc7231#section-6.5.13","title":"Unsupported Media Type"
-//                ,"status":415,"traceId":"|ef8ac498-491cc690bcfb4685."}
             }
         });
     }

@@ -1,6 +1,8 @@
 package com.hyphenate.liaoxin.common.net.bean;
 
-public class RegisterBean extends BaseRequestBean {
+import java.io.Serializable;
+
+public class RegisterBean extends BaseRequestBean implements Serializable {
 
     public String telephone;
     public String code;

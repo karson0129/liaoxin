@@ -1,6 +1,8 @@
 package com.hyphenate.liaoxin.common.net.bean;
 
-public class BaseRequestBean {
+import java.io.Serializable;
+
+public class BaseRequestBean implements Serializable {
 
 
     public String equimentType = android.os.Build.MODEL;

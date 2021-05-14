@@ -26,14 +26,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.gson.Gson;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.liaoxin.DemoHelper;
 import com.hyphenate.liaoxin.MainActivity;
 import com.hyphenate.liaoxin.R;
+import com.hyphenate.liaoxin.common.constant.UserConstant;
 import com.hyphenate.liaoxin.common.db.DemoDbHelper;
+import com.hyphenate.liaoxin.common.db.PrefUtils;
 import com.hyphenate.liaoxin.common.interfaceOrImplement.OnResourceParseCallback;
 import com.hyphenate.easeui.utils.EaseEditTextUtils;
+import com.hyphenate.liaoxin.common.net.bean.RegisterBean;
+import com.hyphenate.liaoxin.common.net.bean.SendCodeBean;
+import com.hyphenate.liaoxin.common.net.callback.ResultCallBack;
+import com.hyphenate.liaoxin.common.net.client.HttpURL;
+import com.hyphenate.liaoxin.common.net.client.HttpUtils;
+import com.hyphenate.liaoxin.common.net.request.BaseRequest;
+import com.hyphenate.liaoxin.common.net.request.SendCodeRequest;
+import com.hyphenate.liaoxin.common.net.request.UserInfoRequest;
 import com.hyphenate.liaoxin.common.utils.ToastUtils;
 import com.hyphenate.liaoxin.section.base.BaseInitFragment;
 import com.hyphenate.liaoxin.section.login.activity.VerificationActivity;
@@ -41,7 +52,16 @@ import com.hyphenate.liaoxin.section.login.viewmodels.LoginFragmentViewModel;
 import com.hyphenate.liaoxin.section.login.viewmodels.LoginViewModel;
 import com.hyphenate.easeui.domain.EaseUser;
 
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Headers;
+import okhttp3.Response;
+
 public class LoginFragment extends BaseInitFragment implements View.OnClickListener, TextWatcher, CompoundButton.OnCheckedChangeListener, TextView.OnEditorActionListener {
+
+    private String TAG = "LoginFragment";
+
     private EditText mEtLoginName;
     private EditText mEtLoginPwd;
     private TextView mTvLoginRegister;
@@ -129,6 +149,7 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
                 @Override
                 public void onError(int code, String message) {
                     super.onError(code, message);
+                    Log.e("login", "code : "+code +" | message:"+message);
                     if(code == EMError.USER_AUTHENTICATION_FAILED) {
                         ToastUtils.showToast(R.string.demo_error_user_authentication_failed);
                     }else {
@@ -201,11 +222,73 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
                 mViewModel.setPageSelect(2);
                 break;
             case R.id.btn_login://登录
-                hideKeyboard();
-                loginToServer();
-//                VerificationActivity.startAction(mContext);
+//                hideKeyboard();
+//                loginToServer();
+//                getVerificationCode();
+//                PrefUtils.setString(mContext, UserConstant.Token,"d7ec89d18e39348b48cf75e5579030c8");
+//                getUserInfo();
+                mFragmentViewModel.login("RQgTiYsznVfNZqK", "YWMtBbSveLSQEeu1O3uw4LbzCQAAAAAAAAAAAAAAAAAAAAFIykExpMpJA5ejWg-EckW-AgMAAAF5agiobgBPGgBdOJVmIVeF09hMLU1a0UiP5gKgCYTS57qx9Mh4aBVwhQ", true);
                 break;
         }
+    }
+
+    /**
+     * 获取当前登录用户
+     * */
+    private void getUserInfo(){
+        HttpUtils.getInstance().post(HttpURL.GET_CURRENT_CLIENT, "", new ResultCallBack() {
+
+            @Override
+            public void onSuccessResponse(Call call, Response response, String str) {
+                Log.d(TAG,"成功："+ str);
+                    UserInfoRequest request = new Gson().fromJson(str,UserInfoRequest.class);
+                    Log.d(TAG,"进来了  环信id："+request.data.huanXinId +" | token:"+request.data.huanxinToken);
+                if (!TextUtils.isEmpty(request.data.huanXinId) && !TextUtils.isEmpty(request.data.huanxinToken) ){
+//                    RQgTiYsznVfNZqK      YWMtBbSveLSQEeu1O3uw4LbzCQAAAAAAAAAAAAAAAAAAAAFIykExpMpJA5ejWg-EckW-AgMAAAF5agiobgBPGgBdOJVmIVeF09hMLU1a0UiP5gKgCYTS57qx9Mh4aBVwhQ
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                super.onFailure(call, e);
+                Log.d(TAG,"失败："+ e.toString());
+            }
+        });
+    }
+
+    /**
+     * 获取验证码
+     */
+    private void getVerificationCode(){
+        SendCodeBean bean = new SendCodeBean();
+        bean.telephone = mUserName;
+        bean.type = SendCodeBean.SendCodeType.Registered;
+        Log.i(TAG,"参数："+ new Gson().toJson(bean));
+        HttpUtils.getInstance().post(HttpURL.SEND_CODE, new Gson().toJson(bean), new ResultCallBack() {
+
+            @Override
+            public void onSuccessResponse(Call call, Response response,String str) {
+//                onResponse: {"resultType":"object","modelType":null,"data":"5380","returnCode":0,"message":"OK","action":null}
+                Log.d(TAG,"成功："+ str);
+                try {
+                    BaseRequest<String> sendCodeRequest = new Gson().fromJson(str,BaseRequest.class);
+                    RegisterBean registerBean = new RegisterBean();
+                    registerBean.telephone = mUserName;
+                    registerBean.code = sendCodeRequest.data;
+                    VerificationActivity.startAction(mContext,registerBean);
+                }catch (Exception e){
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                super.onFailure(call, e);
+                Log.d(TAG,"失败："+ e.toString());
+            }
+        });
     }
 
     /**
@@ -262,7 +345,7 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
     }
 
     private void setButtonEnable(boolean enable) {
-        mBtnLogin.setEnabled(enable);
+//        mBtnLogin.setEnabled(enable);
         if(mEtLoginPwd.hasFocus()) {
             mEtLoginPwd.setImeOptions(enable ? EditorInfo.IME_ACTION_DONE : EditorInfo.IME_ACTION_PREVIOUS);
         }else if(mEtLoginName.hasFocus()) {

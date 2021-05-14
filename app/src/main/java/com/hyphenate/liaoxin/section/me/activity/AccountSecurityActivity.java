@@ -82,29 +82,6 @@ public class AccountSecurityActivity extends BaseInitActivity implements EaseTit
                 break;
             case R.id.item_num:
 
-                RegisterBean bean = new RegisterBean();
-                bean.telephone = "13611414277";
-                bean.code = "1234";
-                bean.nickName = "haha";
-                bean.password = "12345678";
-                Log.i(TAG,"参数："+ new Gson().toJson(bean));
-                HttpUtils.getInstance().post(HttpURL.RESGIER_CLIENT, new Gson().toJson(bean), new ResultCallBack() {
-                    @Override
-                    public void onSuccessResponse(Call call, Response response) {
-                        super.onSuccessResponse(call, response);
-                        try {
-                            Log.i(TAG,"成功："+response.body().string());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        super.onFailure(call, e);
-                        Log.i(TAG,"失败："+ e.toString());
-                    }
-                });
                 break;
             case R.id.item_phone://绑定手机号
 

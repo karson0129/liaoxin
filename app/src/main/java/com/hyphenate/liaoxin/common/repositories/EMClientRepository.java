@@ -1,5 +1,7 @@
 package com.hyphenate.liaoxin.common.repositories;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -115,6 +117,7 @@ public class EMClientRepository extends BaseEMRepository{
                 DemoHelper.getInstance().getModel().setCurrentUserName(userName);
                 DemoHelper.getInstance().getModel().setCurrentUserPwd(pwd);
                 if(isTokenFlag) {
+                    Log.i("login","token登录");
                     EMClient.getInstance().loginWithToken(userName, pwd, new DemoEmCallBack() {
                         @Override
                         public void onSuccess() {

@@ -6,8 +6,15 @@ package com.hyphenate.liaoxin.common.net.client;
  */
 public class HttpURL {
 
-    public final static String SERVER_Address = "http://8.129.61.181:22001";
+    public final static String SERVER_ADDRESS = "http://8.129.61.181:22001";
 
     //用户注册
-    public final static String RESGIER_CLIENT = SERVER_Address + "/api/Client/ResgierClient";
+    public final static String RESGIER_CLIENT = SERVER_ADDRESS + "/api/Client/ResgierClient";
+
+    //发送验证码 重要:发送类型(Type) 0:登录 1:找回密码 4:修改手机号码 5:注册用户
+    public final static String SEND_CODE = SERVER_ADDRESS + "/api/Client/SendCode";
+
+    //获取当前登录用户
+    public final static String GET_CURRENT_CLIENT = SERVER_ADDRESS + "/api/Client/GetCurrenClient";
+
 }

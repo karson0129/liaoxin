@@ -12,11 +12,6 @@ public abstract class ResultCallBack implements LiaoxinCallBack {
 
 
     @Override
-    public void onSuccessResponse(Call call, Response response) {
-
-    }
-
-    @Override
     public void onFailure(Call call, IOException e) {
         if (e != null) {
             if (e instanceof SocketTimeoutException) {

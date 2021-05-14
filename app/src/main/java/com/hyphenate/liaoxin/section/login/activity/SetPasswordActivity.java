@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.hyphenate.easeui.utils.EaseEditTextUtils;
 import com.hyphenate.easeui.widget.EaseTitleBar;
 import com.hyphenate.liaoxin.R;
+import com.hyphenate.liaoxin.common.net.bean.RegisterBean;
 import com.hyphenate.liaoxin.section.base.BaseInitActivity;
 
 /**
@@ -23,16 +24,23 @@ public class SetPasswordActivity extends BaseInitActivity implements EaseTitleBa
 
     private String TAG = "SetPasswordActivity";
 
+
+    private static String Request = "Request";
+
     private EaseTitleBar mToolbarRegister;
     private EditText etLoginPassword;
     private TextView btnLogin;
+    private TextView tvTitle;
 
     private String mPassword;
     private Drawable eyeClose;
     private Drawable eyeOpen;
 
-    public static void startAction(Context context) {
+    private RegisterBean request;
+
+    public static void startAction(Context context,RegisterBean request) {
         Intent intent = new Intent(context, SetPasswordActivity.class);
+        intent.putExtra(Request,request);
         context.startActivity(intent);
     }
 
@@ -44,6 +52,7 @@ public class SetPasswordActivity extends BaseInitActivity implements EaseTitleBa
     @Override
     protected void initIntent(Intent intent) {
         super.initIntent(intent);
+        request = (RegisterBean) intent.getSerializableExtra(Request);
     }
 
     @Override
@@ -52,6 +61,8 @@ public class SetPasswordActivity extends BaseInitActivity implements EaseTitleBa
         mToolbarRegister = findViewById(R.id.toolbar_register);
         etLoginPassword = findViewById(R.id.et_login_password);
         btnLogin = findViewById(R.id.btn_login);
+        tvTitle = findViewById(R.id.tvTitle);
+        tvTitle.setText("设置密码");
     }
 
 
@@ -100,7 +111,11 @@ public class SetPasswordActivity extends BaseInitActivity implements EaseTitleBa
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_login:
-
+            if (!TextUtils.isEmpty(mPassword)){
+                request.password = mPassword;
+                SetNicknameActivity.startAction(mContext,request);
+                finish();
+            }
             break;
         }
     }
