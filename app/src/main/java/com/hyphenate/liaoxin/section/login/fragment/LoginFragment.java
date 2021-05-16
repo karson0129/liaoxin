@@ -45,6 +45,7 @@ import com.hyphenate.liaoxin.common.net.client.HttpUtils;
 import com.hyphenate.liaoxin.common.net.request.BaseRequest;
 import com.hyphenate.liaoxin.common.net.request.SendCodeRequest;
 import com.hyphenate.liaoxin.common.net.request.UserInfoRequest;
+import com.hyphenate.liaoxin.common.utils.AesUtil;
 import com.hyphenate.liaoxin.common.utils.ToastUtils;
 import com.hyphenate.liaoxin.section.base.BaseInitFragment;
 import com.hyphenate.liaoxin.section.login.activity.VerificationActivity;
@@ -226,8 +227,8 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
 //                loginToServer();
 //                getVerificationCode();
 //                PrefUtils.setString(mContext, UserConstant.Token,"d7ec89d18e39348b48cf75e5579030c8");
-//                getUserInfo();
-                mFragmentViewModel.login("RQgTiYsznVfNZqK", "YWMtBbSveLSQEeu1O3uw4LbzCQAAAAAAAAAAAAAAAAAAAAFIykExpMpJA5ejWg-EckW-AgMAAAF5agiobgBPGgBdOJVmIVeF09hMLU1a0UiP5gKgCYTS57qx9Mh4aBVwhQ", true);
+                PrefUtils.setString(mContext, UserConstant.Token,"47ad53d34aeb87d2e727dca6f7540cd8");
+                getUserInfo();
                 break;
         }
     }
@@ -236,23 +237,33 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
      * 获取当前登录用户
      * */
     private void getUserInfo(){
-        HttpUtils.getInstance().post(HttpURL.GET_CURRENT_CLIENT, "", new ResultCallBack() {
+        HttpUtils.getInstance().post(mContext,HttpURL.GET_CURRENT_CLIENT, "", new ResultCallBack() {
 
             @Override
-            public void onSuccessResponse(Call call, Response response, String str) {
+            public void onSuccessResponse(Call call, String str) {
                 Log.d(TAG,"成功："+ str);
-                    UserInfoRequest request = new Gson().fromJson(str,UserInfoRequest.class);
-                    Log.d(TAG,"进来了  环信id："+request.data.huanXinId +" | token:"+request.data.huanxinToken);
-                if (!TextUtils.isEmpty(request.data.huanXinId) && !TextUtils.isEmpty(request.data.huanxinToken) ){
-//                    RQgTiYsznVfNZqK      YWMtBbSveLSQEeu1O3uw4LbzCQAAAAAAAAAAAAAAAAAAAAFIykExpMpJA5ejWg-EckW-AgMAAAF5agiobgBPGgBdOJVmIVeF09hMLU1a0UiP5gKgCYTS57qx9Mh4aBVwhQ
 
-                }
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        UserInfoRequest request = new Gson().fromJson(str,UserInfoRequest.class);
+                        Log.d(TAG,"进来了  环信id："+request.data.huanXinId +" | token:Bearer "+request.data.huanxinToken);
+                        if (!TextUtils.isEmpty(request.data.huanXinId) && !TextUtils.isEmpty(request.data.huanxinToken) ){
+                            mFragmentViewModel.login(request.data.nickName, "Bearer "+request.data.huanxinToken, true);
+                        }
+                    }
+                });
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
                 super.onFailure(call, e);
-                Log.d(TAG,"失败："+ e.toString());
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG,"失败："+ e.toString());
+                    }
+                });
             }
         });
     }
@@ -265,28 +276,36 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
         bean.telephone = mUserName;
         bean.type = SendCodeBean.SendCodeType.Registered;
         Log.i(TAG,"参数："+ new Gson().toJson(bean));
-        HttpUtils.getInstance().post(HttpURL.SEND_CODE, new Gson().toJson(bean), new ResultCallBack() {
+        HttpUtils.getInstance().post(mContext,HttpURL.SEND_CODE, new Gson().toJson(bean), new ResultCallBack() {
 
             @Override
-            public void onSuccessResponse(Call call, Response response,String str) {
-//                onResponse: {"resultType":"object","modelType":null,"data":"5380","returnCode":0,"message":"OK","action":null}
-                Log.d(TAG,"成功："+ str);
-                try {
-                    BaseRequest<String> sendCodeRequest = new Gson().fromJson(str,BaseRequest.class);
-                    RegisterBean registerBean = new RegisterBean();
-                    registerBean.telephone = mUserName;
-                    registerBean.code = sendCodeRequest.data;
-                    VerificationActivity.startAction(mContext,registerBean);
-                }catch (Exception e){
+            public void onSuccessResponse(Call call,String str) {
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG,"成功："+ str);
+                        try {
+                            BaseRequest<String> sendCodeRequest = new Gson().fromJson(str,BaseRequest.class);
+                            RegisterBean registerBean = new RegisterBean();
+                            registerBean.telephone = mUserName;
+                            registerBean.code = sendCodeRequest.data;
+                            VerificationActivity.startAction(mContext,registerBean);
+                        }catch (Exception e){
 
-                }
-
+                        }
+                    }
+                });
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
                 super.onFailure(call, e);
-                Log.d(TAG,"失败："+ e.toString());
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG,"失败："+ e.toString());
+                    }
+                });
             }
         });
     }

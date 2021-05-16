@@ -10,7 +10,7 @@ import okhttp3.Response;
 
 public interface LiaoxinCallBack  {
 
-    void onSuccessResponse(Call call, Response response,String str);
+    void onSuccessResponse(Call call,String str);
 
 
     void onFailure(Call call, IOException e);

@@ -187,16 +187,17 @@ public class SetNicknameActivity extends BaseInitActivity implements EaseTitleBa
     private void getRegister(){
         request.nickName = mNickName;
         Log.i(TAG,"参数："+ new Gson().toJson(request));
-        HttpUtils.getInstance().post(HttpURL.RESGIER_CLIENT, new Gson().toJson(request), new ResultCallBack() {
+        HttpUtils.getInstance().post(mContext,HttpURL.RESGIER_CLIENT, new Gson().toJson(request), new ResultCallBack() {
 
             @Override
-            public void onSuccessResponse(Call call, Response response, String str) {
+            public void onSuccessResponse(Call call, String str) {
                 Log.d(TAG,"成功："+ str);
 //                onResponse: {"resultType":"object","modelType":null,"data":"d7ec89d18e39348b48cf75e5579030c8","returnCode":0,"message":"OK","action":null}
                 try {
-                    BaseRequest<String> sendCodeRequest = new Gson().fromJson(str,BaseRequest.class);
-                    if (!TextUtils.isEmpty(sendCodeRequest.data)){
-                        PrefUtils.setString(mContext, UserConstant.Token,sendCodeRequest.data);
+                    BaseRequest<String> request = new Gson().fromJson(str,BaseRequest.class);
+                    if (!TextUtils.isEmpty(request.data)){
+                        PrefUtils.setString(mContext, UserConstant.Token,request.data);
+                        getUserInfo();
                     }
                 }catch (Exception e){
 
@@ -215,10 +216,10 @@ public class SetNicknameActivity extends BaseInitActivity implements EaseTitleBa
      * 获取当前登录用户
      * */
     private void getUserInfo(){
-        HttpUtils.getInstance().post(HttpURL.GET_CURRENT_CLIENT, "", new ResultCallBack() {
+        HttpUtils.getInstance().post(mContext,HttpURL.GET_CURRENT_CLIENT, "", new ResultCallBack() {
 
             @Override
-            public void onSuccessResponse(Call call, Response response, String str) {
+            public void onSuccessResponse(Call call, String str) {
                 Log.d(TAG,"成功："+ str);
             }
 

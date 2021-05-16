@@ -12,6 +12,7 @@ import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.hyphenate.easeui.modules.contact.EaseContactListLayout;
 import com.hyphenate.liaoxin.R;
 import com.hyphenate.liaoxin.common.constant.DemoConstant;
 import com.hyphenate.liaoxin.common.enums.SearchType;
@@ -50,9 +51,9 @@ public class ContactListFragment extends EaseContactListFragment implements View
         addHeader();
 
         //设置为简洁模式
-        //contactLayout.showSimple();
+        contactLayout.showSimple();
         //获取列表控件
-        //EaseContactListLayout contactList = contactLayout.getContactList();
+        EaseContactListLayout contactList = contactLayout.getContactList();
         //设置条目高度
         //contactList.setItemHeight((int) EaseCommonUtils.dip2px(mContext, 80));
         //设置条目背景
