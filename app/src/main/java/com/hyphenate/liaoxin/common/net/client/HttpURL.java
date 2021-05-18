@@ -8,6 +8,12 @@ public class HttpURL {
 
     public final static String SERVER_ADDRESS = "http://8.129.61.181:22001";
 
+    /**
+     *  图片地址
+     * */
+    public final static String PICTURE_URL = SERVER_ADDRESS + "/api/Image/GetAffix?id=";
+
+
     //用户注册
     public final static String RESGIER_CLIENT = SERVER_ADDRESS + "/api/Client/ResgierClient";
 
@@ -16,5 +22,10 @@ public class HttpURL {
 
     //获取当前登录用户
     public final static String GET_CURRENT_CLIENT = SERVER_ADDRESS + "/api/Client/GetCurrenClient";
+
+    //上传图片
+    public final static String UPLOAD_IMAGE = SERVER_ADDRESS + "/api/Image/UploadImage";
+
+    //
 
 }

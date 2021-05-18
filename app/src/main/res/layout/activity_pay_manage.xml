@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f6f6f6"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <com.hyphenate.easeui.widget.EaseTitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/em_common_title_bar_height"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleBarTitle="支付管理"
+        app:titleBarTitleTextSize="17dp"
+        android:background="@color/white"
+        app:titleBarDisplayHomeAsUpEnabled="true"
+        />
+
+    <com.hyphenate.liaoxin.common.widget.ArrowItemView
+        android:id="@+id/item_renzheng"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_bar"
+        app:arrowItemTitle="实名认证"
+        app:arrowItemContent="未认证"
+        app:arrowItemTitleColor="#292929"
+        app:arrowItemContentColor="#F44A45"
+        app:arrowItemTitleSize="17dp"
+        android:background="@color/white">
+
+    </com.hyphenate.liaoxin.common.widget.ArrowItemView>
+
+
+    <com.hyphenate.liaoxin.common.widget.ArrowItemView
+        android:id="@+id/item_change_password"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_renzheng"
+        android:layout_marginTop="10dp"
+        app:arrowItemTitle="修改支付密码"
+        app:arrowItemTitleColor="#292929"
+        app:arrowItemContentColor="#F44A45"
+        app:arrowItemTitleSize="17dp"
+        android:background="@color/white">
+
+    </com.hyphenate.liaoxin.common.widget.ArrowItemView>
+
+    <com.hyphenate.liaoxin.common.widget.ArrowItemView
+        android:id="@+id/item_wangji_password"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_change_password"
+        app:arrowItemTitle="忘记支付密码"
+        app:arrowItemTitleColor="#292929"
+        app:arrowItemContentColor="#F44A45"
+        app:arrowItemTitleSize="17dp"
+        android:background="@color/white">
+
+    </com.hyphenate.liaoxin.common.widget.ArrowItemView>
+
+    <com.hyphenate.liaoxin.common.widget.ArrowItemView
+        android:id="@+id/item_tuikuan"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_wangji_password"
+        android:layout_marginTop="10dp"
+        app:arrowItemTitle="红包退款方式"
+        app:arrowItemContent="退回零钱"
+        app:arrowItemTitleColor="#292929"
+        app:arrowItemContentColor="#666666"
+        app:arrowItemTitleSize="17dp"
+        android:background="@color/white">
+
+    </com.hyphenate.liaoxin.common.widget.ArrowItemView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

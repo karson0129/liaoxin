@@ -18,20 +18,24 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.gson.Gson;
 import com.hyphenate.EMError;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.easeui.utils.EaseEditTextUtils;
 import com.hyphenate.easeui.widget.EaseTitleBar;
 import com.hyphenate.liaoxin.DemoHelper;
 import com.hyphenate.liaoxin.MainActivity;
 import com.hyphenate.liaoxin.R;
+import com.hyphenate.liaoxin.common.constant.DemoConstant;
 import com.hyphenate.liaoxin.common.constant.UserConstant;
 import com.hyphenate.liaoxin.common.db.PrefUtils;
 import com.hyphenate.liaoxin.common.interfaceOrImplement.OnResourceParseCallback;
+import com.hyphenate.liaoxin.common.livedatas.LiveDataBus;
 import com.hyphenate.liaoxin.common.net.bean.RegisterBean;
 import com.hyphenate.liaoxin.common.net.callback.ResultCallBack;
 import com.hyphenate.liaoxin.common.net.client.HttpURL;
 import com.hyphenate.liaoxin.common.net.client.HttpUtils;
 import com.hyphenate.liaoxin.common.net.request.BaseRequest;
 import com.hyphenate.liaoxin.common.net.request.SendCodeRequest;
+import com.hyphenate.liaoxin.common.net.request.UserInfoRequest;
 import com.hyphenate.liaoxin.common.utils.ToastUtils;
 import com.hyphenate.liaoxin.section.base.BaseInitActivity;
 import com.hyphenate.liaoxin.section.login.viewmodels.LoginFragmentViewModel;
@@ -134,6 +138,8 @@ public class SetNicknameActivity extends BaseInitActivity implements EaseTitleBa
                     DemoHelper.getInstance().setAutoLogin(true);
                     //跳转到主页
                     MainActivity.startAction(mContext);
+                    //发一个Event
+                    LiveDataBus.get().with(DemoConstant.APP_LOGIN).postValue(EaseEvent.create(DemoConstant.APP_LOGIN_FINISH, EaseEvent.TYPE.MESSAGE));
                     mContext.finish();
                 }
 
@@ -182,7 +188,7 @@ public class SetNicknameActivity extends BaseInitActivity implements EaseTitleBa
     }
 
     /**
-     * 获取验证码
+     * 注册
      */
     private void getRegister(){
         request.nickName = mNickName;
@@ -192,7 +198,6 @@ public class SetNicknameActivity extends BaseInitActivity implements EaseTitleBa
             @Override
             public void onSuccessResponse(Call call, String str) {
                 Log.d(TAG,"成功："+ str);
-//                onResponse: {"resultType":"object","modelType":null,"data":"d7ec89d18e39348b48cf75e5579030c8","returnCode":0,"message":"OK","action":null}
                 try {
                     BaseRequest<String> request = new Gson().fromJson(str,BaseRequest.class);
                     if (!TextUtils.isEmpty(request.data)){
@@ -221,14 +226,27 @@ public class SetNicknameActivity extends BaseInitActivity implements EaseTitleBa
             @Override
             public void onSuccessResponse(Call call, String str) {
                 Log.d(TAG,"成功："+ str);
+                UserInfoRequest request = new Gson().fromJson(str,UserInfoRequest.class);
+                Log.d(TAG,"进来了  环信id："+request.data.huanXinId +" | telephone:"+request.data.telephone);
+                if (!TextUtils.isEmpty(request.data.huanXinId) && !TextUtils.isEmpty(request.data.telephone) ){
+                    Login(request.data.huanXinId,request.data.telephone);
+                }
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
                 super.onFailure(call, e);
-                Log.d(TAG,"失败："+ e.toString());
+                Log.d(TAG,"失败：");
             }
         });
     }
 
+    /**
+     * 登录
+     * @param account
+     * @param password
+     */
+    private void Login(String account,String password){
+        mFragmentViewModel.login(account, password, false);
+    }
 }

@@ -2,6 +2,7 @@ package com.hyphenate.liaoxin;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -67,6 +68,9 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     private int[] msgIds = {R.id.tv_main_home_msg, R.id.tv_main_friends_msg, R.id.tv_main_discover_msg, R.id.tv_main_about_me_msg};
     private MainViewModel viewModel;
     private boolean showMenu = true;//是否显示菜单项
+
+    private Drawable homeIv;
+    private Drawable addressBookIv;
 
     public static void startAction(Context context) {
         Intent starter = new Intent(context, MainActivity.class);
@@ -162,6 +166,8 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
+        homeIv = getResources().getDrawable(R.drawable.home_more);
+        addressBookIv = getResources().getDrawable(R.drawable.home_more_add_buddy);
         navView = findViewById(R.id.nav_view);
         mTitleBar = findViewById(R.id.title_bar_main);
         navView.setItemIconTintList(null);
@@ -336,7 +342,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         if(mAboutMeFragment == null) {
             mAboutMeFragment = new AboutMeFragment();
         }
-        //获取自己用户信息
+        //用户信息
         fetchSelfInfo();
         replace(mAboutMeFragment, "me");
     }
@@ -404,11 +410,13 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
             case R.id.em_main_nav_home :
                 switchToHome();
                 mTitleBar.setTitle(getResources().getString(R.string.em_main_title_liaoxin));
+                mTitleBar.getToolbar().setOverflowIcon(homeIv);
                 showNavigation = true;
                 break;
             case R.id.em_main_nav_friends :
                 switchToFriends();
                 mTitleBar.setTitle(getResources().getString(R.string.em_main_title_friends));
+                mTitleBar.getToolbar().setOverflowIcon(addressBookIv);
                 showNavigation = true;
                 invalidateOptionsMenu();
                 break;
@@ -419,7 +427,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
                 break;
             case R.id.em_main_nav_me :
                 switchToAboutMe();
-                mTitleBar.setTitle(getResources().getString(R.string.em_main_title_mede));
+                mTitleBar.setTitle("");
                 showMenu = false;
                 showNavigation = true;
                 break;

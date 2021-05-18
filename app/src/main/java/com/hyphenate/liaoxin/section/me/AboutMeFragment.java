@@ -10,11 +10,15 @@ import com.bumptech.glide.Glide;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMUserInfo;
+import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.liaoxin.DemoHelper;
 import com.hyphenate.liaoxin.R;
 import com.hyphenate.liaoxin.common.constant.DemoConstant;
 import com.hyphenate.liaoxin.common.livedatas.LiveDataBus;
 import com.hyphenate.easeui.manager.EaseThreadManager;
+import com.hyphenate.liaoxin.common.net.client.HttpURL;
+import com.hyphenate.liaoxin.common.utils.ImageLoad;
+import com.hyphenate.liaoxin.common.utils.ToastUtils;
 import com.hyphenate.liaoxin.common.widget.ArrowItemView;
 import com.hyphenate.liaoxin.section.base.BaseInitFragment;
 import com.hyphenate.liaoxin.section.dialog.DemoDialogFragment;
@@ -43,6 +47,7 @@ public class AboutMeFragment extends BaseInitFragment implements View.OnClickLis
     private Button mBtnLogout;
     private TextView nickName_view;
     private TextView userId_view;
+    private ImageView myCode;
     private EMUserInfo userInfo;
     @Override
     protected int getLayoutId() {
@@ -63,7 +68,8 @@ public class AboutMeFragment extends BaseInitFragment implements View.OnClickLis
         mBtnLogout = findViewById(R.id.btn_logout);
         itemCommonPay = findViewById(R.id.item_common_pay);
         itemCommonTeam = findViewById(R.id.item_common_team);
-        nickName_view.setText("账号：" + DemoHelper.getInstance().getCurrentUser());
+        myCode = findViewById(R.id.my_code);
+        userId_view.setText("聊信号：" + DemoHelper.getInstance().getCurrentUser());
     }
 
     @Override
@@ -77,6 +83,7 @@ public class AboutMeFragment extends BaseInitFragment implements View.OnClickLis
         itemDeveloperSet.setOnClickListener(this);
         itemCommonPay.setOnClickListener(this);
         itemCommonTeam.setOnClickListener(this);
+        myCode.setOnClickListener(this);
     }
 
     @Override
@@ -109,6 +116,9 @@ public class AboutMeFragment extends BaseInitFragment implements View.OnClickLis
                 break;
             case R.id.item_common_team://聊信团队
 
+                break;
+            case R.id.my_code:
+                ToastUtils.showSuccessToast("二维码");
                 break;
         }
     }
@@ -153,7 +163,7 @@ public class AboutMeFragment extends BaseInitFragment implements View.OnClickLis
     protected void addLiveDataObserver() {
         LiveDataBus.get().with(DemoConstant.AVATAR_CHANGE, EaseEvent.class).observe(this, event -> {
             if (event != null) {
-                Glide.with(mContext).load(event.message).placeholder(R.drawable.em_login_logo).into(avatar);
+                ImageLoad.intoRoundedCorners(mContext, HttpURL.PICTURE_URL + event.message, (int) EaseCommonUtils.dip2px(mContext, 4),avatar);
                 if(userInfo != null){
                     userInfo.setAvatarUrl(event.message);
                 }
@@ -161,8 +171,8 @@ public class AboutMeFragment extends BaseInitFragment implements View.OnClickLis
         });
         LiveDataBus.get().with(DemoConstant.NICK_NAME_CHANGE, EaseEvent.class).observe(this, event -> {
             if (event != null) {
-                nickName_view.setText("昵称：" + event.message);
-                userId_view.setText("账号：" + EMClient.getInstance().getCurrentUser());
+                nickName_view.setText("" + event.message);
+                userId_view.setText("聊信号：" + EMClient.getInstance().getCurrentUser());
                 if(userInfo != null){
                     userInfo.setNickName(event.message);
                 }

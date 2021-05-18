@@ -49,6 +49,8 @@ public class PayActivity extends BaseInitActivity implements  EaseTitleBar.OnBac
         tvChongZhi = findViewById(R.id.tv_chongzhi);
         tvTiXian = findViewById(R.id.tv_tixian);
         linShouKuanMa = findViewById(R.id.tv_shoukuanma);
+        titleBar.setRightImageResource(R.drawable.home_details);
+
     }
 
     @Override
@@ -60,6 +62,7 @@ public class PayActivity extends BaseInitActivity implements  EaseTitleBar.OnBac
         tvChongZhi.setOnClickListener(this);
         tvTiXian.setOnClickListener(this);
         linShouKuanMa.setOnClickListener(this);
+        titleBar.getRightImage().setOnClickListener(this);
     }
 
     @Override
@@ -89,6 +92,9 @@ public class PayActivity extends BaseInitActivity implements  EaseTitleBar.OnBac
                 break;
             case R.id.tv_shoukuanma://收款码
 
+                break;
+            case R.id.right_image:
+                PayManageActivity.actionStart(mContext);
                 break;
         }
     }

@@ -16,6 +16,7 @@ import com.hyphenate.liaoxin.common.net.callback.ResultCallBack;
 import com.hyphenate.liaoxin.common.net.interceptor.LoggingInterceptor;
 import com.hyphenate.liaoxin.common.net.request.BaseRequest;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -28,6 +29,7 @@ import okhttp3.Callback;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -131,43 +133,63 @@ public class HttpUtils {
         });
     }
 
-//    public static String getToken(String url, String appid, String secret) throws Exception {
-//        String resultStr = null;
-//        @SuppressWarnings("resource")
-//        DefaultHttpClient httpClient = new DefaultHttpClient();
-//        HttpPost post = new HttpPost(url);
-//        //JsonParser jsonparer =JsonParser;// 初始化解析json格式的对象
-//        // 接收参数json列表
-//        JSONObject jsonParam = new JSONObject();
-//        jsonParam.put("grant_type", "client_credentials");
-//        jsonParam.put("client_id", appid);
-//        jsonParam.put("client_secret", secret);
-//        StringEntity entity = new StringEntity(jsonParam.toString(), "utf-8");// 解决中文乱码问题
-//        entity.setContentEncoding("UTF-8");
-//        entity.setContentType("application/json");
-//
-//        post.setEntity(entity);
-//        // 请求结束，返回结果
-//        HttpResponse res = httpClient.execute(post);
-//        // 如果服务器成功地返回响应
-//        String responseContent = null; // 响应内容
-//        HttpEntity httpEntity = res.getEntity();
-//        responseContent = EntityUtils.toString(httpEntity, "UTF-8");
-//
-//        //System.out.println( responseContent);
-//        //JsonObject json = JsonParser.parse(responseContent);
-//        JSONObject json = JSONObject.parseObject(responseContent);
-//        // .getAsJsonObject();
-//        if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-//            if (json.get("errcode") != null){
-//                //resultStr = json.get("errcode").getAsString();
-//            } else {// 正常情况下
-//                resultStr = json.get("access_token").toString();
-//            }
-//        }
-//         // 关闭连接 ,释放资源
-//        httpClient.close();
-//        return resultStr;
-//    }
 
+
+    /**
+     * 上传图片
+     * @param url
+     * @param imagePath 图片路径
+     * @param  callBack
+     */
+    public static void uploadImage(final Context context,String url, String imagePath, ResultCallBack callBack) {
+        Log.d(TAG, imagePath);
+        File file = new File(imagePath);
+        RequestBody image = RequestBody.create(MediaType.parse("image/png"), file);
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file", imagePath, image)
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.d(TAG, "onFailure: " + e.getMessage());
+                ((AppCompatActivity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        callBack.onFailure(call,e);
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                Log.d(TAG, response.protocol() + " " +response.code() + " " + response.message());
+                Headers headers = response.headers();
+                for (int i = 0; i < headers.size(); i++) {
+                    Log.d(TAG, headers.name(i) + ":" + headers.value(i));
+                }
+                try {
+                    String str = response.body().string();
+                    Log.d(TAG, "onResponse: " + str);
+                    BaseRequest request1 = new Gson().fromJson(str,BaseRequest.class);
+                    ((AppCompatActivity)context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (request1 != null && request1.returnCode == 0 && response.code() == 200){
+                                callBack.onSuccessResponse(call,str);
+                            }else {
+                                callBack.onFailure(call,null);
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 }

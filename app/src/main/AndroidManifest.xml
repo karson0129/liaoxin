@@ -96,7 +96,7 @@
         android:roundIcon="@mipmap/em_logo_uidemo"
         android:supportsRtl="true"
         android:usesNonSdkApi="true"
-        android:requestLegacyExternalStorage="false"
+        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true"
         android:name="com.hyphenate.liaoxin.DemoApplication"
         android:theme="@style/AppTheme">
@@ -542,6 +542,8 @@
         <activity android:name=".section.me.activity.PayActivity"></activity>
         <!--  提现      -->
         <activity android:name=".section.me.activity.WithdrawActivity"></activity>
+        <!--  支付管理      -->
+        <activity android:name=".section.me.activity.PayManageActivity"></activity>
     </application>
 
 </manifest>

@@ -5,6 +5,8 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+
+import com.hyphenate.liaoxin.common.livedatas.LiveDataBus;
 import com.hyphenate.liaoxin.common.net.Resource;
 import com.hyphenate.liaoxin.common.livedatas.SingleSourceLiveData;
 import com.hyphenate.liaoxin.common.repositories.EMClientRepository;
@@ -14,12 +16,17 @@ public class LoginViewModel extends AndroidViewModel {
     private EMClientRepository mRepository;
     private SingleSourceLiveData<Resource<String>> registerObservable;
     private SingleSourceLiveData<Integer> pageObservable;
+    private LiveDataBus messageChangeLiveData = LiveDataBus.get();
 
     public LoginViewModel(@NonNull Application application) {
         super(application);
         mRepository = new EMClientRepository();
         registerObservable = new SingleSourceLiveData<>();
         pageObservable = new SingleSourceLiveData<>();
+    }
+
+    public LiveDataBus getMessageChangeObservable() {
+        return messageChangeLiveData;
     }
 
     /**

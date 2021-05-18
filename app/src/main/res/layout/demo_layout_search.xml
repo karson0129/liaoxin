@@ -4,16 +4,52 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.hyphenate.easeui.widget.EaseSearchTextView
+<!--    <com.hyphenate.easeui.widget.EaseSearchTextView-->
+<!--        android:id="@+id/tv_search"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="36dp"-->
+<!--        android:hint="@string/em_conversation_list_search_hint"-->
+<!--        android:layout_marginLeft="16dp"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginRight="16dp"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:layout_marginBottom="3dp"/>-->
+    
+    <LinearLayout
         android:id="@+id/tv_search"
         android:layout_width="match_parent"
         android:layout_height="36dp"
-        android:hint="@string/em_conversation_list_search_hint"
+        android:orientation="horizontal"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="3dp"/>
+        android:layout_marginBottom="3dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/shape_ride_8_f2f2f2"
+        >
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/search"
+            android:layout_marginLeft="10dp"
+            >
+
+        </ImageView>
+
+        <TextView
+            android:layout_marginLeft="7dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13dp"
+            android:text="搜索用户"
+            android:textColor="#AAAAAA">
+
+        </TextView>
+
+    </LinearLayout>
 
 </FrameLayout>

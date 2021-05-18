@@ -29,9 +29,11 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.gson.Gson;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.model.EaseEvent;
 import com.hyphenate.liaoxin.DemoHelper;
 import com.hyphenate.liaoxin.MainActivity;
 import com.hyphenate.liaoxin.R;
+import com.hyphenate.liaoxin.common.constant.DemoConstant;
 import com.hyphenate.liaoxin.common.constant.UserConstant;
 import com.hyphenate.liaoxin.common.db.DemoDbHelper;
 import com.hyphenate.liaoxin.common.db.PrefUtils;
@@ -106,9 +108,10 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
         // 保证切换fragment后相关状态正确
         boolean enableTokenLogin = DemoHelper.getInstance().getModel().isEnableTokenLogin();
         mTvLoginToken.setVisibility(enableTokenLogin ? View.VISIBLE : View.GONE);
-        if(!TextUtils.isEmpty(DemoHelper.getInstance().getCurrentLoginUser())) {
-            mEtLoginName.setText(DemoHelper.getInstance().getCurrentLoginUser());
-        }
+        //暂时取消回显
+//        if(!TextUtils.isEmpty(DemoHelper.getInstance().getCurrentLoginUser())) {
+//            mEtLoginName.setText(DemoHelper.getInstance().getCurrentLoginUser());
+//        }
 //        tvVersion.setText("V"+ EMClient.VERSION);
         if(isTokenFlag) {
             switchLogin();
@@ -188,6 +191,11 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
             });
 
         });
+        mViewModel.getMessageChangeObservable().with(DemoConstant.APP_LOGIN, EaseEvent.class).observe(this, event -> {
+            if(TextUtils.equals(event.event, DemoConstant.APP_LOGIN_FINISH)) {
+                mContext.finish();
+            }
+        });
         DemoDbHelper.getInstance(mContext).getDatabaseCreatedObservable().observe(getViewLifecycleOwner(), response -> {
             Log.i("login", "本地数据库初始化完成");
         });
@@ -227,8 +235,10 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
 //                loginToServer();
 //                getVerificationCode();
 //                PrefUtils.setString(mContext, UserConstant.Token,"d7ec89d18e39348b48cf75e5579030c8");
-                PrefUtils.setString(mContext, UserConstant.Token,"47ad53d34aeb87d2e727dca6f7540cd8");
-                getUserInfo();
+//                PrefUtils.setString(mContext, UserConstant.Token,"47ad53d34aeb87d2e727dca6f7540cd8");
+//                getUserInfo();
+//                mFragmentViewModel.login("RQgTiYsznVfNZqK", "18620485183", isTokenFlag);
+//                mFragmentViewModel.login("QsIDZqgVTvHKayV", "13533358782", isTokenFlag);
                 break;
         }
     }
@@ -247,9 +257,9 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
                     @Override
                     public void run() {
                         UserInfoRequest request = new Gson().fromJson(str,UserInfoRequest.class);
-                        Log.d(TAG,"进来了  环信id："+request.data.huanXinId +" | token:Bearer "+request.data.huanxinToken);
-                        if (!TextUtils.isEmpty(request.data.huanXinId) && !TextUtils.isEmpty(request.data.huanxinToken) ){
-                            mFragmentViewModel.login(request.data.nickName, "Bearer "+request.data.huanxinToken, true);
+                        Log.d(TAG,"进来了  环信id："+request.data.huanXinId +" | token: "+request.data.telephone);
+                        if (!TextUtils.isEmpty(request.data.huanXinId) && !TextUtils.isEmpty(request.data.telephone) ){
+//                            mFragmentViewModel.login(request.data.nickName, "12345678", isTokenFlag);
                         }
                     }
                 });
@@ -261,7 +271,7 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d(TAG,"失败："+ e.toString());
+                        Log.d(TAG,"失败：");
                     }
                 });
             }
@@ -332,7 +342,7 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
             return;
         }
         isClick = true;
-        mFragmentViewModel.login(mUserName, mPwd, isTokenFlag);
+//        mFragmentViewModel.login(mUserName, mPwd, isTokenFlag);
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,7 +38,8 @@ import java.util.List;
 
 
 public class ConversationListFragment extends EaseConversationListFragment implements View.OnClickListener {
-    private EaseSearchTextView tvSearch;
+//    private EaseSearchTextView tvSearch;
+    private LinearLayout tvSearch;
 
     private ConversationListViewModel mViewModel;
 
