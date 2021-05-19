@@ -100,7 +100,7 @@ public class HttpUtils {
                 ((AppCompatActivity)context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        callBack.onFailure(call,e);
+                        callBack.onFailure(call,e,"连结失败");
                     }
                 });
             }
@@ -122,7 +122,7 @@ public class HttpUtils {
                             if (request1 != null && request1.returnCode == 0 && response.code() == 200){
                                 callBack.onSuccessResponse(call,str);
                             }else {
-                                callBack.onFailure(call,null);
+                                callBack.onFailure(call,null,request1.message);
                             }
                         }
                     });
@@ -141,7 +141,7 @@ public class HttpUtils {
      * @param imagePath 图片路径
      * @param  callBack
      */
-    public static void uploadImage(final Context context,String url, String imagePath, ResultCallBack callBack) {
+    public void uploadImage(final Context context,String url, String imagePath, ResultCallBack callBack) {
         Log.d(TAG, imagePath);
         File file = new File(imagePath);
         RequestBody image = RequestBody.create(MediaType.parse("image/png"), file);
@@ -160,7 +160,7 @@ public class HttpUtils {
                 ((AppCompatActivity)context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        callBack.onFailure(call,e);
+                        callBack.onFailure(call,e,"连结失败");
                     }
                 });
             }
@@ -182,7 +182,7 @@ public class HttpUtils {
                             if (request1 != null && request1.returnCode == 0 && response.code() == 200){
                                 callBack.onSuccessResponse(call,str);
                             }else {
-                                callBack.onFailure(call,null);
+                                callBack.onFailure(call,null,request1.message);
                             }
                         }
                     });

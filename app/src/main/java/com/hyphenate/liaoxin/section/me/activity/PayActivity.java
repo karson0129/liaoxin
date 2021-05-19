@@ -88,7 +88,7 @@ public class PayActivity extends BaseInitActivity implements  EaseTitleBar.OnBac
 
                 break;
             case R.id.tv_tixian://提现
-
+                WithdrawActivity.actionStart(mContext);
                 break;
             case R.id.tv_shoukuanma://收款码
 

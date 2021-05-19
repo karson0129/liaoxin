@@ -39,6 +39,7 @@
             android:layout_height="64dp"
             android:layout_marginRight="12dp"
             android:src="@drawable/ease_default_avatar"
+            android:scaleType="centerCrop"
             app:ease_shape_type="none"/>
 
         <ImageView
@@ -61,7 +62,6 @@
         android:layout_width="match_parent"
         android:layout_height="52dp"
         app:arrowItemTitle="名字"
-        app:arrowItemContent="123"
         app:arrowItemTitleColor="#292929"
         app:arrowItemContentColor="#666666"
         app:arrowItemTitleSize="17dp"
@@ -74,7 +74,6 @@
         android:layout_width="match_parent"
         android:layout_height="52dp"
         app:arrowItemTitle="聊信号"
-        app:arrowItemContent="123"
         app:arrowItemTitleColor="#292929"
         app:arrowItemContentColor="#666666"
         app:arrowItemTitleSize="17dp"
@@ -123,7 +122,6 @@
         android:layout_width="match_parent"
         android:layout_height="52dp"
         app:arrowItemTitle="性别"
-        app:arrowItemContent="123"
         app:arrowItemTitleColor="#292929"
         app:arrowItemContentColor="#666666"
         app:arrowItemTitleSize="17dp"

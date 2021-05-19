@@ -142,57 +142,19 @@
         />
 
     <TextView
-        android:id="@+id/tv1"
+        android:id="@+id/account_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/btn_login"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="40dp"
-        android:textColor="#AAAAAA"
-        android:text="注册即代表阅读并同意"
+        android:textColor="#292929"
+        android:text="用聊信密码登录"
         android:layout_marginTop="20dp"
-        android:textSize="13dp">
+        android:textSize="14dp">
 
     </TextView>
 
-    <TextView
-        android:id="@+id/tv2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/btn_login"
-        app:layout_constraintLeft_toRightOf="@id/tv1"
-        android:textColor="#0085EB"
-        android:text="服务协议"
-        android:layout_marginTop="20dp"
-        android:textSize="13dp">
-
-    </TextView>
-
-    <TextView
-        android:id="@+id/tv3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/btn_login"
-        app:layout_constraintLeft_toRightOf="@id/tv2"
-        android:textColor="#AAAAAA"
-        android:text="和"
-        android:layout_marginTop="20dp"
-        android:textSize="13dp">
-
-    </TextView>
-
-    <TextView
-        android:id="@+id/tv4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/btn_login"
-        app:layout_constraintLeft_toRightOf="@id/tv3"
-        android:textColor="#0085EB"
-        android:text="隐私政策"
-        android:layout_marginTop="20dp"
-        android:textSize="13dp">
-
-    </TextView>
 
     <TextView
         android:id="@+id/tv_login_register"
@@ -242,12 +204,12 @@
     </View>
 
     <TextView
-        android:id="@+id/account_login"
+        android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14dp"
         android:textColor="#292929"
-        android:text="账号登录"
+        android:text="账号注册"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@id/line2"
         android:layout_marginBottom="32dp"

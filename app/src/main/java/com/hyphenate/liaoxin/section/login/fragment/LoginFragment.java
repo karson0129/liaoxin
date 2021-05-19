@@ -75,6 +75,7 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
     private TextView tvAgreement;
     private TextView tvAccountLogin;
     private TextView tvPassword;
+    private TextView tvRegister;
     private String mUserName;
     private String mPwd;
     private LoginViewModel mViewModel;
@@ -94,6 +95,7 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
+        tvRegister = findViewById(R.id.register);
         tvPassword = findViewById(R.id.password);
         tvAccountLogin = findViewById(R.id.account_login);
         mEtLoginName = findViewById(R.id.et_login_name);
@@ -130,6 +132,7 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
         cbSelect.setOnCheckedChangeListener(this);
         tvAccountLogin.setOnClickListener(this);
         tvPassword.setOnClickListener(this);
+        tvRegister.setOnClickListener(this);
         mEtLoginPwd.setOnEditorActionListener(this);
         EaseEditTextUtils.clearEditTextListener(mEtLoginName);
     }
@@ -217,7 +220,7 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_login_register :
+            case R.id.tv_login_register ://账号登录
             case R.id.account_login :
                 mViewModel.clearRegisterInfo();
                 mViewModel.setPageSelect(1);
@@ -226,19 +229,25 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
                 isTokenFlag = !isTokenFlag;
                 switchLogin();
                 break;
-            case R.id.tv_login_server_set:
+            case R.id.tv_login_server_set://忘记密码
             case R.id.password:
                 mViewModel.setPageSelect(2);
                 break;
             case R.id.btn_login://登录
-//                hideKeyboard();
+                if (!TextUtils.isEmpty(mUserName)) {
+                    hideKeyboard();
 //                loginToServer();
-//                getVerificationCode();
+                    getVerificationCode();
+                }
 //                PrefUtils.setString(mContext, UserConstant.Token,"d7ec89d18e39348b48cf75e5579030c8");
 //                PrefUtils.setString(mContext, UserConstant.Token,"47ad53d34aeb87d2e727dca6f7540cd8");
 //                getUserInfo();
 //                mFragmentViewModel.login("RQgTiYsznVfNZqK", "18620485183", isTokenFlag);
 //                mFragmentViewModel.login("QsIDZqgVTvHKayV", "13533358782", isTokenFlag);
+//                mFragmentViewModel.login("sHyCbKNyzI8EDnR", "13623456789", isTokenFlag);
+                break;
+            case R.id.register://注册
+                mViewModel.setPageSelect(3);
                 break;
         }
     }
@@ -266,8 +275,8 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
             }
 
             @Override
-            public void onFailure(Call call, IOException e) {
-                super.onFailure(call, e);
+            public void onFailure(Call call, IOException e,String str) {
+                super.onFailure(call, e,str);
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -284,38 +293,28 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
     private void getVerificationCode(){
         SendCodeBean bean = new SendCodeBean();
         bean.telephone = mUserName;
-        bean.type = SendCodeBean.SendCodeType.Registered;
+        bean.type = SendCodeBean.SendCodeType.Login;
         Log.i(TAG,"参数："+ new Gson().toJson(bean));
         HttpUtils.getInstance().post(mContext,HttpURL.SEND_CODE, new Gson().toJson(bean), new ResultCallBack() {
 
             @Override
             public void onSuccessResponse(Call call,String str) {
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG,"成功："+ str);
-                        try {
-                            BaseRequest<String> sendCodeRequest = new Gson().fromJson(str,BaseRequest.class);
-                            RegisterBean registerBean = new RegisterBean();
-                            registerBean.telephone = mUserName;
-                            registerBean.code = sendCodeRequest.data;
-                            VerificationActivity.startAction(mContext,registerBean);
-                        }catch (Exception e){
+                Log.d(TAG,"成功："+ str);
+                try {
+                    BaseRequest<String> sendCodeRequest = new Gson().fromJson(str,BaseRequest.class);
+                    RegisterBean registerBean = new RegisterBean();
+                    registerBean.telephone = mUserName;
+                    registerBean.code = sendCodeRequest.data;
+                    VerificationActivity.startAction(mContext,registerBean);
+                }catch (Exception e){
 
-                        }
-                    }
-                });
+                }
             }
 
             @Override
-            public void onFailure(Call call, IOException e) {
-                super.onFailure(call, e);
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG,"失败："+ e.toString());
-                    }
-                });
+            public void onFailure(Call call, IOException e,String str) {
+                super.onFailure(call, e,str);
+                Log.d(TAG,"失败："+ e.toString());
             }
         });
     }
@@ -362,6 +361,13 @@ public class LoginFragment extends BaseInitFragment implements View.OnClickListe
         EaseEditTextUtils.showRightDrawable(mEtLoginName, clear);
         EaseEditTextUtils.showRightDrawable(mEtLoginPwd, isTokenFlag ? null : eyeClose);
         setButtonEnable(!TextUtils.isEmpty(mUserName) && !TextUtils.isEmpty(mPwd));
+        if (!TextUtils.isEmpty(mUserName)){
+            mBtnLogin.setBackground(mContext.getResources().getDrawable(R.drawable.shape_ride_8_0189ff));
+            mBtnLogin.setTextColor(mContext.getResources().getColor(R.color.white));
+        }else {
+            mBtnLogin.setBackground(mContext.getResources().getDrawable(R.drawable.shape_ride_8_f2f2f2));
+            mBtnLogin.setTextColor(mContext.getResources().getColor(R.color.color_AAAAAA));
+        }
     }
 
     @Override

@@ -91,9 +91,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/em_logo_uidemo"
+        android:icon="@mipmap/liaoxin_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/em_logo_uidemo"
+        android:roundIcon="@mipmap/liaoxin_logo"
         android:supportsRtl="true"
         android:usesNonSdkApi="true"
         android:requestLegacyExternalStorage="true"

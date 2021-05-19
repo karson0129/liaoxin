@@ -26,6 +26,38 @@ public class HttpURL {
     //上传图片
     public final static String UPLOAD_IMAGE = SERVER_ADDRESS + "/api/Image/UploadImage";
 
-    //
+    //修改昵称
+    public final static String MODIFY_NICKNAME = SERVER_ADDRESS + "/api/Client/ModifyNickName";
+
+    //手机号登录
+    public final static String LOGIN_BY_CODE = SERVER_ADDRESS + "/api/Client/LoginByCode";
+
+    //账号密码登录
+    public final static String LOGIN = SERVER_ADDRESS + "/api/Client/Login";
+
+    //修改密码
+    public final static String CHANGE_PASSWORD = SERVER_ADDRESS + "/api/Client/ChangePassword";
+
+    //修改头像
+    public final static String MODIFY_COVER = SERVER_ADDRESS + "/api/Client/ModifyCover";
+
+    //基本设置修改:个性签名/震动/提醒/字体大小等字段普通更改
+    public final static String MODIFY_BASE_INFO = SERVER_ADDRESS + "/api/Client/ModifyBaseInfo";
+
+    //修改资金密码
+    public final static String CHANGE_COIN_PASSWORD = SERVER_ADDRESS + "/api/Client/ChangeCoinPassword";
+
+    //设置支付密码
+    public final static String SET_COIN_PASSWORD = SERVER_ADDRESS + "/api/Client/SetCoinPassword";
+
+    //实名认证
+    public final static String REAL_NAME_AUTH = SERVER_ADDRESS + "/api/Client/RealNameAuth";
+
+    //通过手机号找回密码
+    public final static String FIND_PASSWORD_BY_PHONE  = SERVER_ADDRESS + "/api/Client/FindPasswordByPhoneRequest";
+
+    //修改手机号
+    public final static String MODIFY_CLIENT_TELEPHONE = SERVER_ADDRESS + "/api/Client/ModifyClientTelephone";
+
 
 }

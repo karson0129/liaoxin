@@ -210,8 +210,8 @@ public class SetNicknameActivity extends BaseInitActivity implements EaseTitleBa
             }
 
             @Override
-            public void onFailure(Call call, IOException e) {
-                super.onFailure(call, e);
+            public void onFailure(Call call, IOException e,String str) {
+                super.onFailure(call, e,str);
                 Log.d(TAG,"失败："+ e.toString());
             }
         });
@@ -234,8 +234,8 @@ public class SetNicknameActivity extends BaseInitActivity implements EaseTitleBa
             }
 
             @Override
-            public void onFailure(Call call, IOException e) {
-                super.onFailure(call, e);
+            public void onFailure(Call call, IOException e,String str) {
+                super.onFailure(call, e,str);
                 Log.d(TAG,"失败：");
             }
         });

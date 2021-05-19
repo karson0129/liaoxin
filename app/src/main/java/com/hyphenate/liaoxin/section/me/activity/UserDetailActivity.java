@@ -219,8 +219,9 @@ public class UserDetailActivity extends BaseInitActivity implements View.OnClick
             }
 
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(Call call, IOException e,String str) {
                 dismissLoading();
+                super.onFailure(call,e,str);
                 Log.i(TAG, "失败");
             }
         });
@@ -251,8 +252,9 @@ public class UserDetailActivity extends BaseInitActivity implements View.OnClick
             }
 
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(Call call, IOException e,String str) {
                 dismissLoading();
+                super.onFailure(call,e,str);
                 Log.i(TAG, "失败");
             }
         });
@@ -296,6 +298,8 @@ public class UserDetailActivity extends BaseInitActivity implements View.OnClick
                 runOnUiThread(new Runnable() {
                     public void run() {
                        EMUserInfo userInfo = userInfos.get(EMClient.getInstance().getCurrentUser());
+//                        EMUserInfo: {"avatarUrl":"","birth":"","email":"","ext":"","gender":0,"nickName":"","phoneNumber":"","signature":"","userId":"qsidzqgvtvhkayv"}
+                       Log.i(TAG,"EMUserInfo: "+new Gson().toJson(userInfo));
 
                         //昵称
                         if(userInfo != null && userInfo.getNickName() != null &&
@@ -318,6 +322,9 @@ public class UserDetailActivity extends BaseInitActivity implements View.OnClick
                         //签名
                         if (userInfo != null && !TextUtils.isEmpty(userInfo.getSignature()) ){
                             itemQianming.getTvContent().setText(userInfo.getSignature());
+                        }
+                        if (!TextUtils.isEmpty(userInfo.getUserId())){
+                            itemLiaoxinhao.getTvContent().setText(userInfo.getUserId());
                         }
                     }
                 });

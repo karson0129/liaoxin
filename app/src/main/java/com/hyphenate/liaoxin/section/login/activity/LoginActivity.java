@@ -10,6 +10,7 @@ import com.hyphenate.liaoxin.R;
 import com.hyphenate.liaoxin.section.base.BaseFragment;
 import com.hyphenate.liaoxin.section.base.BaseInitActivity;
 import com.hyphenate.liaoxin.section.login.fragment.LoginFragment;
+import com.hyphenate.liaoxin.section.login.fragment.AccountLoginFragment;
 import com.hyphenate.liaoxin.section.login.fragment.RegisterFragment;
 import com.hyphenate.liaoxin.section.login.fragment.ServerSetFragment;
 import com.hyphenate.liaoxin.section.login.viewmodels.LoginViewModel;
@@ -49,11 +50,12 @@ public class LoginActivity extends BaseInitActivity {
                 return;
             }
             if(page == 1) {
-                replace(new RegisterFragment());
+                replace(new AccountLoginFragment());
             }else if(page == 2) {
                 replace(new ServerSetFragment());
+            }else if (page == 3){
+                replace(new RegisterFragment());
             }
-
         });
     }
 

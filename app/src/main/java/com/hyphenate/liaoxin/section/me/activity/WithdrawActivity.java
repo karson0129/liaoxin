@@ -1,5 +1,6 @@
 package com.hyphenate.liaoxin.section.me.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -27,6 +28,12 @@ public class WithdrawActivity extends BaseInitActivity implements  EaseTitleBar.
     private EditText etPay;
     private TextView tvYue;//显示余额
     private TextView btnAction;
+
+
+    public static void actionStart(Context context) {
+        Intent starter = new Intent(context, WithdrawActivity.class);
+        context.startActivity(starter);
+    }
 
     @Override
     protected int getLayoutId() {

@@ -13,5 +13,5 @@ public interface LiaoxinCallBack  {
     void onSuccessResponse(Call call,String str);
 
 
-    void onFailure(Call call, IOException e);
+    void onFailure(Call call, IOException e,String str);
 }
