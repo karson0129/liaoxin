@@ -25,7 +25,7 @@ public class ImageLoad {
      * @param imageView
      */
     public static void intoRoundedCorners(Context context, String url, int roundingRadius, ImageView imageView){
-        Glide.with(context).load(url)
+        Glide.with(context).load(url) .placeholder(R.drawable.em_login_logo)
                 .apply(RequestOptions.bitmapTransform(new RoundedCorners(roundingRadius))).into(imageView);//四周都是圆角的圆角矩形图片。
     }
 
@@ -36,7 +36,8 @@ public class ImageLoad {
      * @param imageView
      */
     public static void intoCircleCro(Context context, String url,ImageView imageView){
-        Glide.with(context).load(url).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(imageView);//标准圆形图片。
+        Glide.with(context).load(url) .placeholder(R.drawable.em_login_logo)
+                .apply(RequestOptions.bitmapTransform(new CircleCrop())).into(imageView);//标准圆形图片。
     }
 
     public static void into(Context context,String url,float sizeMultiplier,ImageView imageView){

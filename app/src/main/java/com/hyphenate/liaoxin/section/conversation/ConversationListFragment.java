@@ -1,6 +1,7 @@
 package com.hyphenate.liaoxin.section.conversation;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.easeui.adapter.EaseAdapterDelegate;
+import com.hyphenate.easeui.adapter.EaseBaseRecyclerViewAdapter;
+import com.hyphenate.easeui.modules.conversation.delegate.EaseSystemMsgDelegate;
 import com.hyphenate.liaoxin.DemoHelper;
 import com.hyphenate.liaoxin.R;
 import com.hyphenate.liaoxin.common.constant.DemoConstant;
@@ -22,6 +26,7 @@ import com.hyphenate.liaoxin.common.utils.ToastUtils;
 import com.hyphenate.liaoxin.section.base.BaseActivity;
 import com.hyphenate.liaoxin.section.chat.activity.ChatActivity;
 import com.hyphenate.liaoxin.section.chat.viewmodel.MessageViewModel;
+import com.hyphenate.liaoxin.section.conversation.delegate.SystemMessageDelegate;
 import com.hyphenate.liaoxin.section.conversation.viewmodel.ConversationListViewModel;
 import com.hyphenate.liaoxin.section.dialog.DemoDialogFragment;
 import com.hyphenate.liaoxin.section.dialog.SimpleDialogFragment;
@@ -41,6 +46,8 @@ public class ConversationListFragment extends EaseConversationListFragment imple
 //    private EaseSearchTextView tvSearch;
     private LinearLayout tvSearch;
 
+    private String TAG = "ConversationListFragment";
+
     private ConversationListViewModel mViewModel;
 
     @Override
@@ -51,6 +58,11 @@ public class ConversationListFragment extends EaseConversationListFragment imple
         llRoot.addView(view, 0);
         tvSearch = view.findViewById(R.id.tv_search);
         conversationListLayout.getListAdapter().setEmptyLayoutId(R.layout.ease_layout_default_no_data);
+
+        List<EaseAdapterDelegate<Object, EaseBaseRecyclerViewAdapter.ViewHolder>> delegates = conversationListLayout.getListAdapter().getAllDelegate();
+        for (EaseAdapterDelegate<Object, EaseBaseRecyclerViewAdapter.ViewHolder> delegate : delegates) {
+            Log.i(TAG,"tag:"+delegate.getTag());
+        }
 
         initViewModel();
     }

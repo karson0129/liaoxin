@@ -2,7 +2,9 @@ package com.hyphenate.liaoxin;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,7 +36,9 @@ import com.hyphenate.liaoxin.common.permission.PermissionsManager;
 import com.hyphenate.liaoxin.common.permission.PermissionsResultAction;
 import com.hyphenate.liaoxin.common.utils.PreferenceManager;
 import com.hyphenate.liaoxin.common.utils.PushUtils;
+import com.hyphenate.liaoxin.common.utils.ToastUtils;
 import com.hyphenate.liaoxin.section.MainViewModel;
+import com.hyphenate.liaoxin.section.addfriend.AddFriendActivity;
 import com.hyphenate.liaoxin.section.base.BaseInitActivity;
 import com.hyphenate.liaoxin.section.chat.ChatPresenter;
 import com.hyphenate.liaoxin.section.contact.activity.GroupContactManageActivity;
@@ -50,6 +54,9 @@ import com.hyphenate.easeui.ui.base.EaseBaseFragment;
 import com.hyphenate.easeui.widget.EaseTitleBar;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.chat.EMUserInfo.*;
+import com.yzq.zxinglibrary.android.CaptureActivity;
+import com.yzq.zxinglibrary.bean.ZxingConfig;
+import com.yzq.zxinglibrary.common.Constant;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -59,6 +66,11 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 
 public class MainActivity extends BaseInitActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+
+    private String TAG = "MainActivity";
+
+    private int REQUEST_CODE_SCAN = 1001;
+
     private BottomNavigationView navView;
     private EaseTitleBar mTitleBar;
     private EaseBaseFragment mConversationListFragment, mFriendsFragment, mDiscoverFragment, mAboutMeFragment;
@@ -120,19 +132,98 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
                 break;
             case R.id.action_friend :
             case R.id.action_search_friend :
-                AddContactActivity.startAction(mContext, SearchType.CHAT);
+//                AddContactActivity.startAction(mContext, SearchType.CHAT);
+                AddFriendActivity.startAction(mContext);
                 break;
             case R.id.action_search_group :
                 GroupContactManageActivity.actionStart(mContext, true);
                 break;
             case R.id.action_scan :
-                showToast("扫一扫");
+                goScan();
                 break;
             case R.id.action_receiving_code:
                 showToast("收款码");
                 break;
         }
         return true;
+    }
+
+    private void goScan(){
+        if (Build.VERSION.SDK_INT >= 23) {
+            int REQUEST_CODE_PERMISSION_STORAGE = 200;
+            String[] permissions = {
+                    android.Manifest.permission.CAMERA,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+            };
+            boolean isPermissions = true;
+            for (String str : permissions) {
+                if (this.checkSelfPermission(str) != PackageManager.PERMISSION_GRANTED) {
+                    isPermissions = false;
+                    this.requestPermissions(permissions, REQUEST_CODE_PERMISSION_STORAGE);
+                    return;
+                }
+            }
+            if (isPermissions){
+                scan();
+            }
+        }else {
+            scan();
+        }
+    }
+
+    private void scan(){
+        Intent intentScan = new Intent(mContext, CaptureActivity.class);
+        /*ZxingConfig是配置类
+         *可以设置是否显示底部布局，闪光灯，相册，
+         * 是否播放提示音  震动
+         * 设置扫描框颜色等
+         * 也可以不传这个参数
+         * */
+        ZxingConfig config = new ZxingConfig();
+        config.setPlayBeep(true);//是否播放扫描声音 默认为true
+        config.setShake(true);//是否震动  默认为true
+        config.setDecodeBarCode(false);//是否扫描条形码 默认为true
+        config.setReactColor(R.color.white);//设置扫描框四个角的颜色 默认为淡蓝色
+        config.setFrameLineColor(R.color.white);//设置扫描框边框颜色 默认无色
+        config.setFullScreenScan(false);//是否全屏扫描  默认为true  设为false则只会在扫描框中扫描
+        intentScan.putExtra(Constant.INTENT_ZXING_CONFIG, config);
+        startActivityForResult(intentScan, REQUEST_CODE_SCAN);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permission, int[] grantResults) {
+        //requestCode就是requestPermissions()的第三个参数
+        //permission就是requestPermissions()的第二个参数
+        //grantResults是结果，0调试通过，-1表示拒绝
+        if (requestCode == 200){
+            boolean isPermissions = true;
+            for (int i = 0; i < grantResults.length; i++) {
+                if (grantResults[i] == -1){
+                    isPermissions = false;
+                }
+            }
+            if (isPermissions){
+                scan();
+            }else {
+                ToastUtils.showFailToast("未给予权限");
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // 扫描二维码/条码回传
+        if (requestCode == REQUEST_CODE_SCAN && resultCode == RESULT_OK) {
+            if (data != null) {
+
+                String content = data.getStringExtra(Constant.CODED_CONTENT);
+                ToastUtils.showToast(content);
+//                result.setText("扫描结果为：" + content);
+            }
+        }
     }
 
     /**
@@ -167,7 +258,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
         homeIv = getResources().getDrawable(R.drawable.home_more);
-        addressBookIv = getResources().getDrawable(R.drawable.home_more_add_buddy);
+        addressBookIv = getResources().getDrawable(R.drawable.address_add_buddy);
         navView = findViewById(R.id.nav_view);
         mTitleBar = findViewById(R.id.title_bar_main);
         navView.setItemIconTintList(null);

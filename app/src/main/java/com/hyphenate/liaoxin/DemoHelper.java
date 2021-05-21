@@ -364,7 +364,7 @@ public class DemoHelper {
      */
     private EaseAvatarOptions getAvatarOptions() {
         EaseAvatarOptions avatarOptions = new EaseAvatarOptions();
-        avatarOptions.setAvatarShape(1);
+        avatarOptions.setAvatarShape(0);
         return avatarOptions;
     }
 

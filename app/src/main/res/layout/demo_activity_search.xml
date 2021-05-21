@@ -17,13 +17,19 @@
     <EditText
         android:id="@+id/query"
         android:layout_width="0dp"
-        android:layout_height="@dimen/em_common_search_height"
+        android:layout_height="36dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/tv_cancel"
         app:layout_constraintTop_toBottomOf="@id/title_bar"
         android:hint="@string/search"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:background="@drawable/shape_ride_8_f2f2f2"
+        android:layout_marginLeft="16dp"
+        android:drawableLeft="@drawable/search"
+        android:textColor="#292929"
+        android:textColorHint="#AAAAAA"
+        android:textSize="13dp"
         style="@style/demo_search_et_style" />
 
     <ImageButton
@@ -49,12 +55,11 @@
         app:layout_constraintBottom_toBottomOf="@id/query"
         android:gravity="center"
         android:text="@string/cancel"
-        android:textSize="@dimen/em_size_normal"
-        android:textColor="@color/em_color_brand"
-        android:layout_marginRight="@dimen/em_margin_15"
-        android:layout_marginEnd="@dimen/em_margin_15"
-        android:layout_marginLeft="@dimen/em_margin_15"
-        android:layout_marginStart="@dimen/em_margin_15"/>
+        android:textSize="16dp"
+        android:textColor="#0189FF"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        />
 
     <com.hyphenate.easeui.widget.EaseRecyclerView
         android:id="@+id/rv_list"

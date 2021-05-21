@@ -513,7 +513,7 @@ public class RegisterFragment extends BaseInitFragment implements EaseTitleBar.O
                 Log.i(TAG, "成功：" + str);
                 PicRequest request = new Gson().fromJson(str,PicRequest.class);
                 if (request != null && !TextUtils.isEmpty(request.id)){
-                    mIcon = request.id;
+                    mIcon = HttpURL.PICTURE_URL + request.id;
                     ImageLoad.into(mContext,HttpURL.PICTURE_URL + mIcon,0.5f,ivHeader);
                     btnContoul();
                 }
@@ -547,7 +547,7 @@ public class RegisterFragment extends BaseInitFragment implements EaseTitleBar.O
                 Log.i(TAG, "成功：" + str);
                 PicRequest request = new Gson().fromJson(str,PicRequest.class);
                 if (request != null && !TextUtils.isEmpty(request.id)){
-                    mIcon = request.id;
+                    mIcon = HttpURL.PICTURE_URL + request.id;
                     ImageLoad.into(mContext,HttpURL.PICTURE_URL + mIcon,0.5f,ivHeader);
                     btnContoul();
                 }

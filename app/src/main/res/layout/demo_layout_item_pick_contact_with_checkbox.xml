@@ -10,26 +10,38 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:paddingLeft="10dp"
-        android:textColor="@android:color/black"
+        android:paddingLeft="16dp"
+        android:textColor="#292929"
         android:textSize="15sp"
         android:gravity="center_vertical"
         tools:text="A"
         android:visibility="visible" />
 
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/em_common_item_height"
+        android:layout_height="57dp"
         android:background="@drawable/ease_mm_listitem"
         android:gravity="center_vertical"
         android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:enabled="false"
+            android:clickable="false"
+            android:background="@drawable/demo_selector_bg_check"
+            android:layout_marginLeft="16dp"
+            android:button="@null" />
 
         <com.hyphenate.easeui.widget.EaseImageView
             android:id="@+id/avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="@dimen/em_margin_20"
             android:layout_gravity="center_vertical"
+            android:layout_marginLeft="18dp"
             android:scaleType="fitXY"
             android:src="@drawable/ease_default_avatar" />
 
@@ -39,24 +51,12 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
+            android:paddingLeft="16dp"
             android:singleLine="true"
             android:ellipsize="end"
             android:text="小明"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/em_size_big_notify" />
-
-        <CheckBox
-            android:id="@+id/checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
-            android:layout_marginLeft="@dimen/em_margin_10"
-            android:layout_gravity="center_vertical"
-            android:enabled="false"
-            android:clickable="false"
-            android:background="@drawable/demo_selector_bg_check"
-            android:button="@null" />
+            android:textColor="#292929"
+            android:textSize="17dp" />
 
     </LinearLayout>
 

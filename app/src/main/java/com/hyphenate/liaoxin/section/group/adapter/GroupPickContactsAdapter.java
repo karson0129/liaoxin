@@ -8,11 +8,13 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 //import com.bumptech.glide.Glide;
+import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.liaoxin.DemoHelper;
 import com.hyphenate.liaoxin.R;
 import com.hyphenate.easeui.adapter.EaseBaseRecyclerViewAdapter;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.widget.EaseImageView;
+import com.hyphenate.liaoxin.common.utils.ImageLoad;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +88,8 @@ public class GroupPickContactsAdapter extends EaseBaseRecyclerViewAdapter<EaseUs
             String username = getRealUsername(item.getUsername());
             name.setText(item.getNickname());
             //Glide.with(mContext).load(R.drawable.ease_default_avatar).into(avatar);
-            avatar.setImageResource(R.drawable.ease_default_avatar);
+//            avatar.setImageResource(R.drawable.ease_default_avatar);
+            ImageLoad.intoRoundedCorners(mContext,item.getAvatar(), (int) EaseCommonUtils.dip2px(mContext, 6),avatar);
             String header = item.getInitialLetter();
 
             if (position == 0 || header != null && !header.equals(getItem(position - 1).getInitialLetter())) {

@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.liaoxin.DemoHelper;
 import com.hyphenate.liaoxin.R;
 import com.hyphenate.liaoxin.common.widget.ArrowItemView;
@@ -43,7 +44,7 @@ public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.O
         itemCommonSet = findViewById(R.id.item_common_set);
         itemPrivacy = findViewById(R.id.item_privacy);
         btnLogout = findViewById(R.id.btn_logout);
-        itemSecurity.getTvContent().setText("ID:karson");
+        itemSecurity.getTvContent().setText("ID:"+ EMClient.getInstance().getCurrentUser());
     }
 
     @Override

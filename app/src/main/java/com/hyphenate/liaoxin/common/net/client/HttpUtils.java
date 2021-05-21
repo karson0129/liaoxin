@@ -122,7 +122,7 @@ public class HttpUtils {
                             if (request1 != null && request1.returnCode == 0 && response.code() == 200){
                                 callBack.onSuccessResponse(call,str);
                             }else {
-                                callBack.onFailure(call,null,request1.message);
+                                callBack.onFailure(call,null,request1 == null?"连结失败":request1.message);
                             }
                         }
                     });

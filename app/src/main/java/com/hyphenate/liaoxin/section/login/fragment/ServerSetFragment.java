@@ -2,6 +2,7 @@ package com.hyphenate.liaoxin.section.login.fragment;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -15,16 +16,31 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.Group;
 
+import com.google.gson.Gson;
 import com.hyphenate.easeui.utils.EaseEditTextUtils;
 import com.hyphenate.liaoxin.DemoHelper;
 import com.hyphenate.liaoxin.R;
 import com.hyphenate.liaoxin.common.model.DemoServerSetBean;
+import com.hyphenate.liaoxin.common.net.bean.FindPasswordBean;
+import com.hyphenate.liaoxin.common.net.bean.SendCodeBean;
+import com.hyphenate.liaoxin.common.net.callback.ResultCallBack;
+import com.hyphenate.liaoxin.common.net.client.HttpURL;
+import com.hyphenate.liaoxin.common.net.client.HttpUtils;
+import com.hyphenate.liaoxin.common.utils.ToastUtils;
 import com.hyphenate.liaoxin.section.base.BaseInitFragment;
 import com.hyphenate.liaoxin.section.dialog.DemoDialogFragment;
 import com.hyphenate.liaoxin.section.dialog.SimpleDialogFragment;
 import com.hyphenate.easeui.widget.EaseTitleBar;
 
+import java.io.IOException;
+import java.net.SocketTimeoutException;
+
+import okhttp3.Call;
+
 public class ServerSetFragment extends BaseInitFragment implements EaseTitleBar.OnBackPressListener, CompoundButton.OnCheckedChangeListener, TextWatcher, View.OnClickListener {
+
+    private String TAG = "ServerSetFragment";
+
     private EaseTitleBar mToolbarServer;
     private Switch mSwitchServer;
     private TextView mEtServerHint;
@@ -199,16 +215,26 @@ public class ServerSetFragment extends BaseInitFragment implements EaseTitleBar.
 
     @Override
     public void afterTextChanged(Editable s) {
-        mAppkey = mEtAppkey.getText().toString().trim();
         mPhone = etLoginName.getText().toString().trim();
         mVerificationCode = etVerificationCode.getText().toString().trim();
         mPassword = etNewPassword.getText().toString().trim();
+        mAppkey = mEtAppkey.getText().toString().trim();
         EaseEditTextUtils.showRightDrawable(etLoginName, clear);
         EaseEditTextUtils.showRightDrawable(etVerificationCode, clear);
         EaseEditTextUtils.showRightDrawable(etNewPassword, clear);
         DemoHelper.getInstance().getModel().enableCustomAppkey(!TextUtils.isEmpty(mAppkey) && mSwitchServer.isChecked());
         checkButtonEnable();
+        btnContoul();
+    }
 
+    private void btnContoul(){
+        if (isLogin(false)){
+            btnAction.setBackground(mContext.getResources().getDrawable(R.drawable.shape_ride_8_0189ff));
+            btnAction.setTextColor(mContext.getResources().getColor(R.color.white));
+        }else {
+            btnAction.setBackground(mContext.getResources().getDrawable(R.drawable.shape_ride_8_f2f2f2));
+            btnAction.setTextColor(mContext.getResources().getColor(R.color.color_AAAAAA));
+        }
     }
 
     private void checkButtonEnable() {
@@ -253,13 +279,112 @@ public class ServerSetFragment extends BaseInitFragment implements EaseTitleBar.
         }
         switch (v.getId()){
             case R.id.verification_code://获取验证码
-
+                if (!TextUtils.isEmpty(mPhone)){
+                    getVerificationCode();
+                }
                 break;
             case R.id.btn_action:
-
+                if (isLogin(true)){
+                    getFindPassword();
+                }
                 break;
         }
     }
+
+    private boolean isLogin(boolean isShow){
+        if (TextUtils.isEmpty(mPhone)){
+            if (isShow)
+                ToastUtils.showFailToast("请输入手机号码");
+            return false;
+        }
+        if (TextUtils.isEmpty(mVerificationCode)){
+            if (isShow)
+                ToastUtils.showFailToast("请输入验证码");
+            return false;
+        }
+        if (TextUtils.isEmpty(mPassword)){
+            if (isShow)
+                ToastUtils.showFailToast("请输入密码");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 找回密码
+     */
+    private void getFindPassword(){
+        showLoading();
+        FindPasswordBean bean = new FindPasswordBean();
+        bean.telephone = mPhone;
+        bean.code = mVerificationCode;
+        bean.newPassword = mPassword;
+        Log.i(TAG,"参数："+ new Gson().toJson(bean));
+        HttpUtils.getInstance().post(mContext, HttpURL.FIND_PASSWORD_BY_PHONE, new Gson().toJson(bean), new ResultCallBack() {
+            @Override
+            public void onSuccessResponse(Call call, String str) {
+                dismissLoading();
+                ToastUtils.showSuccessToast("修改成功");
+                onBackPress();
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e,String str) {
+                dismissLoading();
+                super.onFailure(call,e,str);
+                Log.i(TAG,"失败");
+            }
+        });
+    }
+
+    /**
+     * 获取验证码
+     */
+    private void getVerificationCode(){
+        showLoading();
+        SendCodeBean bean = new SendCodeBean();
+        bean.telephone = mPhone;
+        bean.type = SendCodeBean.SendCodeType.RetrievePassword;
+        Log.i(TAG,"参数："+ new Gson().toJson(bean));
+        HttpUtils.getInstance().post(mContext, HttpURL.SEND_CODE, new Gson().toJson(bean), new ResultCallBack() {
+
+            @Override
+            public void onSuccessResponse(Call call, String str) {
+                dismissLoading();
+                Log.d(TAG,"成功："+ str);
+                ToastUtils.showSuccessToast("获取成功");
+                if (timer != null){
+                    timer.start();
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e, String str) {
+                dismissLoading();
+                super.onFailure(call, e,str);
+                Log.d(TAG,"失败："+ e.toString());
+                ToastUtils.showFailToast("获取失败");
+            }
+        });
+    }
+
+    /**
+     *  计时器
+     */
+    private CountDownTimer timer = new CountDownTimer(60000, 1000) {
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            tvVerificationCode.setEnabled(false);
+            tvVerificationCode.setText((millisUntilFinished / 1000) + "秒后可重发");
+        }
+
+        @Override
+        public void onFinish() {
+            tvVerificationCode.setEnabled(true);
+            tvVerificationCode.setText("获取验证码");
+        }
+    };
 
     private void saveServerSet() {
         if(mCustomServerEnable) {
@@ -315,4 +440,11 @@ public class ServerSetFragment extends BaseInitFragment implements EaseTitleBar.
 //        mBtnServer.setCompoundDrawablesWithIntrinsicBounds(null, null, rightDrawable, null);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (timer != null){
+            timer.cancel();
+        }
+    }
 }

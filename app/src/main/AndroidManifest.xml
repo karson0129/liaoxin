@@ -17,6 +17,8 @@
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
     <!-- 悬浮窗权限 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!-- 通讯录   -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <!-- IM SDK required start -->
     <!-- 允许程序振动 -->
@@ -544,6 +546,10 @@
         <activity android:name=".section.me.activity.WithdrawActivity"></activity>
         <!--  支付管理      -->
         <activity android:name=".section.me.activity.PayManageActivity"></activity>
+        <!--  添加好友      -->
+        <activity android:name=".section.addfriend.AddFriendActivity"></activity>
+        <!--  通讯录      -->
+        <activity android:name=".section.addfriend.AddressBookActivity"></activity>
     </application>
 
 </manifest>

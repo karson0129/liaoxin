@@ -163,7 +163,7 @@ public class UserDetailActivity extends BaseInitActivity implements View.OnClick
     protected void initData() {
         super.initData();
         if(headImageUrl != null && headImageUrl.length()> 0){
-            ImageLoad.into(mContext,HttpURL.PICTURE_URL + headImageUrl,0.5f,headImageView);
+            ImageLoad.into(mContext,headImageUrl,0.5f,headImageView);
         }
         if(headImageUrl == null || nickName == null){
             intSelfDate();
@@ -180,7 +180,7 @@ public class UserDetailActivity extends BaseInitActivity implements View.OnClick
         if((requestCode == 1 && resultCode == RESULT_OK)) {
             if(data != null) {
                 headImageUrl = data.getStringExtra("headImage");
-                ImageLoad.into(mContext,HttpURL.PICTURE_URL + headImageUrl,0.5f,headImageView);
+                ImageLoad.into(mContext,headImageUrl,0.5f,headImageView);
             }
         }else if((requestCode == 2 && resultCode == RESULT_OK)) {
             if(data != null) {
@@ -214,7 +214,7 @@ public class UserDetailActivity extends BaseInitActivity implements View.OnClick
 //                {"id":"bd889bde-b6b6-4a0f-a279-e51549ffd941"}
                 PicRequest request = new Gson().fromJson(str,PicRequest.class);
                 if (request != null && !TextUtils.isEmpty(request.id)){
-                    upDataArrow(request.id);
+                    upDataArrow(HttpURL.PICTURE_URL + request.id);
                 }
             }
 
@@ -247,7 +247,7 @@ public class UserDetailActivity extends BaseInitActivity implements View.OnClick
 //                {"id":"bd889bde-b6b6-4a0f-a279-e51549ffd941"}
                 PicRequest request = new Gson().fromJson(str,PicRequest.class);
                 if (request != null && !TextUtils.isEmpty(request.id)){
-                    upDataArrow(request.id);
+                    upDataArrow(HttpURL.PICTURE_URL + request.id);
                 }
             }
 
@@ -311,7 +311,7 @@ public class UserDetailActivity extends BaseInitActivity implements View.OnClick
                         //头像
                         if(userInfo != null && userInfo.getAvatarUrl() != null && userInfo.getAvatarUrl().length() > 0){
                             headImageUrl = userInfo.getAvatarUrl();
-                            ImageLoad.into(mContext,HttpURL.PICTURE_URL + headImageUrl,0.5f,headImageView);
+                            ImageLoad.into(mContext,headImageUrl,0.5f,headImageView);
                             PreferenceManager.getInstance().setCurrentUserAvatar(headImageUrl);
                         }
                         //性别  性别(默认为0 ,1表示男,2表示女,其他为非法)
@@ -341,8 +341,8 @@ public class UserDetailActivity extends BaseInitActivity implements View.OnClick
     protected void addLiveDataObserver() {
         LiveDataBus.get().with(DemoConstant.AVATAR_CHANGE, EaseEvent.class).observe(this, event -> {
             if (event != null) {
-                Glide.with(mContext).load(HttpURL.PICTURE_URL + event.message).placeholder(R.drawable.em_login_logo).into(headImageView);
-                ImageLoad.into(mContext,HttpURL.PICTURE_URL + event.message,0.5f,headImageView);
+//                Glide.with(mContext).load(HttpURL.PICTURE_URL + event.message).placeholder(R.drawable.em_login_logo).into(headImageView);
+                ImageLoad.into(mContext,event.message,0.5f,headImageView);
             }
         });
         LiveDataBus.get().with(DemoConstant.NICK_NAME_CHANGE, EaseEvent.class).observe(this, event -> {

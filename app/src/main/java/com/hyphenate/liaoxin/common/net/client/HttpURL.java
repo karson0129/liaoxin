@@ -59,5 +59,8 @@ public class HttpURL {
     //修改手机号
     public final static String MODIFY_CLIENT_TELEPHONE = SERVER_ADDRESS + "/api/Client/ModifyClientTelephone";
 
+    //全局搜索添加好友(聊信号/手机号码)
+    public final static String SEARCH_FRIEND = SERVER_ADDRESS + "/api/ClientRelation/GlobalSearchFriend";
+
 
 }

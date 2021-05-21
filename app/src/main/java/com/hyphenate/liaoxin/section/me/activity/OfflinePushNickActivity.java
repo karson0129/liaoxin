@@ -91,34 +91,34 @@ public class OfflinePushNickActivity extends BaseInitActivity implements OnClick
 		if(v.getId() == R.id.btn_save) {
 			String nick = inputNickName.getText().toString();
 			if (nick != null && nick.length() > 0) {
-                changeNickName(nick);
-//				EMClient.getInstance().userInfoManager().updateOwnInfoByAttribute(EMUserInfoType.NICKNAME, nick, new EMValueCallBack<String>() {
-//					@Override
-//					public void onSuccess(String value) {
-//						EMLog.d(TAG, "fetchUserInfoById :" + value);
-//						showToast(R.string.demo_offline_nickname_update_success);
-//						nickName = nick;
-//						PreferenceManager.getInstance().setCurrentUserNick(nick);
-//
-//
-//						EaseEvent event = EaseEvent.create(DemoConstant.NICK_NAME_CHANGE, EaseEvent.TYPE.CONTACT);
-//						//发送联系人更新事件
-//						event.message = nick;
-//						LiveDataBus.get().with(DemoConstant.NICK_NAME_CHANGE).postValue(event);
-//						runOnUiThread(new Runnable() {
-//							public void run() {
-//								//同时更新推送昵称
-//								viewModel.updatePushNickname(nick);
-//							}
-//						});
-//					}
-//
-//					@Override
-//					public void onError(int error, String errorMsg) {
-//						EMLog.d(TAG, "fetchUserInfoById  error:" + error + " errorMsg:" + errorMsg);
-//						showToast(R.string.demo_offline_nickname_update_failed);
-//					}
-//				});
+//                changeNickName(nick);
+				EMClient.getInstance().userInfoManager().updateOwnInfoByAttribute(EMUserInfoType.NICKNAME, nick, new EMValueCallBack<String>() {
+					@Override
+					public void onSuccess(String value) {
+						EMLog.d(TAG, "fetchUserInfoById :" + value);
+						showToast(R.string.demo_offline_nickname_update_success);
+						nickName = nick;
+						PreferenceManager.getInstance().setCurrentUserNick(nick);
+
+
+						EaseEvent event = EaseEvent.create(DemoConstant.NICK_NAME_CHANGE, EaseEvent.TYPE.CONTACT);
+						//发送联系人更新事件
+						event.message = nick;
+						LiveDataBus.get().with(DemoConstant.NICK_NAME_CHANGE).postValue(event);
+						runOnUiThread(new Runnable() {
+							public void run() {
+								//同时更新推送昵称
+								viewModel.updatePushNickname(nick);
+							}
+						});
+					}
+
+					@Override
+					public void onError(int error, String errorMsg) {
+						EMLog.d(TAG, "fetchUserInfoById  error:" + error + " errorMsg:" + errorMsg);
+						showToast(R.string.demo_offline_nickname_update_failed);
+					}
+				});
 			}else{
 				showToast(R.string.demo_offline_nickname_is_empty);
 			}

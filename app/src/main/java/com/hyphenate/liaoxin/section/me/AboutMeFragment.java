@@ -163,7 +163,7 @@ public class AboutMeFragment extends BaseInitFragment implements View.OnClickLis
     protected void addLiveDataObserver() {
         LiveDataBus.get().with(DemoConstant.AVATAR_CHANGE, EaseEvent.class).observe(this, event -> {
             if (event != null) {
-                ImageLoad.intoRoundedCorners(mContext, HttpURL.PICTURE_URL + event.message, (int) EaseCommonUtils.dip2px(mContext, 4),avatar);
+                ImageLoad.intoRoundedCorners(mContext, event.message, (int) EaseCommonUtils.dip2px(mContext, 4),avatar);
                 if(userInfo != null){
                     userInfo.setAvatarUrl(event.message);
                 }
