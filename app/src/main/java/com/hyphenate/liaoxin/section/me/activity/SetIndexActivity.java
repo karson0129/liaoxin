@@ -12,6 +12,7 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.liaoxin.DemoHelper;
 import com.hyphenate.liaoxin.R;
+import com.hyphenate.liaoxin.common.db.PrefUtils;
 import com.hyphenate.liaoxin.common.widget.ArrowItemView;
 import com.hyphenate.liaoxin.section.base.BaseInitActivity;
 import com.hyphenate.liaoxin.section.login.activity.LoginActivity;
@@ -99,6 +100,7 @@ public class SetIndexActivity extends BaseInitActivity implements EaseTitleBar.O
                         pd.dismiss();
                         // show login screen
                         finishOtherActivities();
+                        PrefUtils.clearPreference(mContext);//清楚用户信息
                         startActivity(new Intent(mContext, LoginActivity.class));
                         finish();
                     }

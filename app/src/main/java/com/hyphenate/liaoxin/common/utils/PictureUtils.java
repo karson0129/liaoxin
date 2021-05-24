@@ -9,12 +9,22 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
+import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+
+import com.hyphenate.util.PathUtil;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 /**
  * 图片操作类
@@ -158,5 +168,94 @@ public class PictureUtils {
             }
         }
         return data;
+    }
+
+
+    public static String getRealFilePath2(@NonNull Context context, Uri uri) {
+        String mimeType = context.getContentResolver().getType(uri);
+        String filename = null;
+
+        if (mimeType == null && context != null) {
+            String uriString = null;
+            try {
+                uriString = URLDecoder.decode(uri.toString(), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            filename = getName(uriString);
+        } else {
+            Cursor returnCursor = context.getContentResolver().query(uri, null,
+                    null, null, null);
+            if (returnCursor != null) {
+                int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                returnCursor.moveToFirst();
+                filename = returnCursor.getString(nameIndex);
+                returnCursor.close();
+            }
+        }
+        return filename;
+    }
+
+    private static String getName(String filename) {
+        if (filename == null) {
+            return null;
+        }
+        int index = filename.lastIndexOf('/');
+        return filename.substring(index + 1);
+    }
+
+
+    /**
+     * 从FileProvider获取文件
+     * @param context
+     * @param uri
+     * @return
+     */
+    private static String copyFileProviderUri(Context context, Uri uri) {
+        //如果是分享过来的文件，则将其写入到私有目录下
+        String filename = getRealFilePath(context, uri);
+        if(TextUtils.isEmpty(filename)) {
+            return "";
+        }
+        String filePath = PathUtil.getInstance().getFilePath() + File.separator + filename;
+        if(new File(filePath).exists()) {
+            return filePath;
+        }
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            in = context.getContentResolver().openInputStream(uri);
+            out = new FileOutputStream(filePath);
+            copy(in, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(in != null) {
+                    in.close();
+                }
+                if(out != null) {
+                    out.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return new File(filePath).exists() ? filePath : "";
+    }
+
+    public static long copy(@NonNull InputStream in, @NonNull OutputStream out) {
+        long sum = 0;
+        try {
+            byte[] tmp = new byte[2048];
+            int l;
+            while ((l = in.read(tmp)) != -1) {
+                out.write(tmp, 0, l);
+                sum += l;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sum;
     }
 }

@@ -189,18 +189,7 @@ public class AddContactActivity extends SearchActivity implements EaseTitleBar.O
                 try {
                     SearchRequest request = new Gson().fromJson(str,SearchRequest.class);
                     if (request != null){
-                        EaseUser user = new EaseUser(request.data.getHuanxinId().toLowerCase());
-                        if (!TextUtils.isEmpty(request.data.getNickName())){
-                            user.setNickname(request.data.getNickName());
-                        }
-                        if (!TextUtils.isEmpty(request.data.getCover())){
-                            user.setAvatar(request.data.getCover());
-                        }
-
-                        if (adapter.getData() != null && !adapter.getData().isEmpty()) {
-                            adapter.clearData();
-                        }
-                        adapter.addData(user);
+                        getSearchUserInfo(request.data.getHuanxinId().toLowerCase());
                     }
                 }catch (Exception e){
                     ToastUtils.showFailToast("解析错误");
@@ -212,6 +201,46 @@ public class AddContactActivity extends SearchActivity implements EaseTitleBar.O
                 dismissLoading();
                 super.onFailure(call, e, str);
 
+            }
+        });
+    }
+
+    private void getSearchUserInfo(String uid){
+        String[] userId = new String[1];
+        userId[0] = uid;
+        EMUserInfo.EMUserInfoType[] userInfoTypes = new EMUserInfo.EMUserInfoType[4];
+        userInfoTypes[0] = EMUserInfo.EMUserInfoType.NICKNAME;
+        userInfoTypes[1] = EMUserInfo.EMUserInfoType.AVATAR_URL;
+        userInfoTypes[2] = EMUserInfo.EMUserInfoType.GENDER;
+        userInfoTypes[3] = EMUserInfo.EMUserInfoType.SIGN;
+        EMClient.getInstance().userInfoManager().fetchUserInfoByAttribute(userId, userInfoTypes,new EMValueCallBack<Map<String, EMUserInfo>>() {
+            @Override
+            public void onSuccess(Map<String, EMUserInfo> userInfos) {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        EMUserInfo userInfo = userInfos.get(EMClient.getInstance().getCurrentUser());
+//                        EMUserInfo: {"avatarUrl":"","birth":"","email":"","ext":"","gender":0,"nickName":"","phoneNumber":"","signature":"","userId":"qsidzqgvtvhkayv"}
+                        Log.i(TAG,"EMUserInfo: "+new Gson().toJson(userInfo));
+
+                        EaseUser user = new EaseUser();
+                        if (!TextUtils.isEmpty(userInfo.getNickName())){
+                            user.setNickname(userInfo.getNickName());
+                        }
+                        if (!TextUtils.isEmpty(userInfo.getAvatarUrl())){
+                            user.setAvatar(userInfo.getAvatarUrl());
+                        }
+
+                        if (adapter.getData() != null && !adapter.getData().isEmpty()) {
+                            adapter.clearData();
+                        }
+                        adapter.addData(user);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+                EMLog.e(TAG,"fetchUserInfoByIds error:" + error + " errorMsg:" + errorMsg);
             }
         });
     }

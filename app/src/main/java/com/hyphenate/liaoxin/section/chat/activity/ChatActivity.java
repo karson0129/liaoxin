@@ -79,9 +79,9 @@ public class ChatActivity extends BaseInitActivity implements EaseTitleBar.OnBac
     }
 
     private void setTitleBarRight() {
-        if(chatType == DemoConstant.CHATTYPE_SINGLE) {
+        if(chatType == DemoConstant.CHATTYPE_SINGLE) {//单聊
             titleBarMessage.setRightImageResource(R.drawable.chat_user_info);
-        }else {
+        }else {//群聊
             titleBarMessage.setRightImageResource(R.drawable.chat_group_info);
         }
     }

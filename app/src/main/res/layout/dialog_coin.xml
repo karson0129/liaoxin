@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/shape_whtie_6dp_top"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="16dp"
+        android:src="@drawable/pay_close">
+
+    </ImageView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_coin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="26dp"
+            android:textColor="#292929"
+            android:textStyle="bold"
+            android:text="￥0.00">
+
+        </TextView>
+
+    </LinearLayout>
+
+    <com.hyphenate.liaoxin.common.widget.ArrowItemView
+        android:id="@+id/item_phone"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        app:arrowItemAvatarHeight="@dimen/em_about_me_avatar_size"
+        app:arrowItemAvatarWidth="@dimen/em_about_me_avatar_size"
+        android:layout_marginTop="30dp"
+        app:arrowItemTitle="订单信息"
+        app:arrowItemContent="发普通红包"
+        app:arrowItemTitleColor="#999999"
+        app:arrowItemTitleSize="15dp"
+        app:arrowItemContentColor="#292929"
+        android:foreground="@drawable/demo_ripple_click_gray"
+        app:arrowItemShowArrow="false"
+        app:arrowItemShowDivider="true"
+        />
+
+    <LinearLayout
+        android:id="@+id/selected"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="付款方式"
+            android:textSize="15dp"
+            android:textColor="#999999"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            >
+
+        </TextView>
+
+        <ImageView
+            android:id="@+id/iv_bank"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:src="@drawable/pay_max_change"
+            android:layout_marginLeft="46dp">
+
+        </ImageView>
+
+        <TextView
+            android:id="@+id/tv_bank"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="建设银行（4370）"
+            android:textColor="#292929"
+            android:textSize="17dp"
+            android:layout_marginLeft="11dp"
+            android:gravity="center_vertical"
+            >
+
+        </TextView>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/right_jiantou"
+            >
+
+        </ImageView>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_action"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/shape_ride_8_0189ff"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="28dp"
+        android:textColor="@color/white"
+        android:textSize="17dp"
+        android:text="确定付款"
+        android:gravity="center"
+        >
+
+    </TextView>
+
+</LinearLayout>

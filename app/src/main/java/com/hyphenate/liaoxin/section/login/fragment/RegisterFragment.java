@@ -207,6 +207,7 @@ public class RegisterFragment extends BaseInitFragment implements EaseTitleBar.O
         request.nickName = mNickName;
         request.code = mVerCode;
         request.password = mPassword;
+        request.cover = mIcon;
         Log.i(TAG,"参数："+ new Gson().toJson(request));
         HttpUtils.getInstance().post(mContext,HttpURL.RESGIER_CLIENT, new Gson().toJson(request), new ResultCallBack() {
 

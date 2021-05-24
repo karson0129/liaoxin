@@ -143,7 +143,7 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * 结束除了当前Activity外的其他Activity
      */
-    protected void finishOtherActivities() {
+    public void finishOtherActivities() {
         UserActivityLifecycleCallbacks lifecycleCallbacks = DemoApplication.getInstance().getLifecycleCallbacks();
         if(lifecycleCallbacks == null) {
             finish();

@@ -1,20 +1,29 @@
 package com.hyphenate.liaoxin.common.net.client;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
+import com.hyphenate.EMCallBack;
 import com.hyphenate.cloud.HttpResponse;
 import com.hyphenate.liaoxin.DemoApplication;
+import com.hyphenate.liaoxin.DemoHelper;
+import com.hyphenate.liaoxin.R;
 import com.hyphenate.liaoxin.common.constant.UserConstant;
+import com.hyphenate.liaoxin.common.db.DemoDbHelper;
 import com.hyphenate.liaoxin.common.db.PrefUtils;
 import com.hyphenate.liaoxin.common.net.callback.ResultCallBack;
 import com.hyphenate.liaoxin.common.net.interceptor.LoggingInterceptor;
 import com.hyphenate.liaoxin.common.net.request.BaseRequest;
+import com.hyphenate.liaoxin.section.base.BaseActivity;
+import com.hyphenate.liaoxin.section.login.activity.LoginActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
@@ -100,7 +109,7 @@ public class HttpUtils {
                 ((AppCompatActivity)context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        callBack.onFailure(call,e,"连结失败");
+                        callBack.onFailure(call,e,"连接失败");
                     }
                 });
             }
@@ -122,7 +131,10 @@ public class HttpUtils {
                             if (request1 != null && request1.returnCode == 0 && response.code() == 200){
                                 callBack.onSuccessResponse(call,str);
                             }else {
-                                callBack.onFailure(call,null,request1 == null?"连结失败":request1.message);
+                                if (response.code() == 401){
+                                    logout(context);
+                                }
+                                callBack.onFailure(call,null,request1 == null?"连接失败":request1.message);
                             }
                         }
                     });
@@ -133,7 +145,36 @@ public class HttpUtils {
         });
     }
 
+    private void logout(Context mContext) {
+        final ProgressDialog pd = new ProgressDialog(mContext);
+        String st = "Token过期，请从新登录..";
+        pd.setMessage(st);
+        pd.setCanceledOnTouchOutside(false);
+        pd.show();
+        DemoHelper.getInstance().logout(true,new EMCallBack() {
 
+            @Override
+            public void onSuccess() {
+                pd.dismiss();
+                // show login screen
+                ((BaseActivity)mContext).finishOtherActivities();
+                PrefUtils.clearPreference(mContext);//清楚用户信息
+                mContext.startActivity(new Intent(mContext, LoginActivity.class));
+                ((AppCompatActivity)mContext).finish();
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+
+            }
+
+            @Override
+            public void onError(int code, String message) {
+                pd.dismiss();
+                Toast.makeText(mContext, "unbind devicetokens failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     /**
      * 上传图片

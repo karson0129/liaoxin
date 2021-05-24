@@ -62,5 +62,10 @@ public class HttpURL {
     //全局搜索添加好友(聊信号/手机号码)
     public final static String SEARCH_FRIEND = SERVER_ADDRESS + "/api/ClientRelation/GlobalSearchFriend";
 
+    //发个人红包
+    public final static String CREATE_CLIENT_RED_PACKET = SERVER_ADDRESS + "/api/RedPackets/CreateClientRedPacket";
+
+    //获取当前登录客户的银行卡
+    public final static String GET_CLIENT_BANKS = SERVER_ADDRESS + "/api/Bank/GetClientBanks";
 
 }

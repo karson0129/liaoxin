@@ -22,4 +22,6 @@
     <item name="contact_header_item_chat_room_list" type="id"/>
     <!-- 名片 -->
     <item name="extend_item_user_card" type="id"/>
+    <!-- 红包   -->
+    <item name="extend_item_hongbao" type="id"/>
 </resources>

@@ -550,6 +550,8 @@
         <activity android:name=".section.addfriend.AddFriendActivity"></activity>
         <!--  通讯录      -->
         <activity android:name=".section.addfriend.AddressBookActivity"></activity>
+        <!--  红包 单聊      -->
+        <activity android:name=".section.chat.activity.SingleRedEnvelopeActivity"></activity>
     </application>
 
 </manifest>

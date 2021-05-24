@@ -569,4 +569,9 @@
     <string name="title_activity_choose_head_image">选择头像</string>
     <string name="demo_contact_get_userInfo_failed">获取用户属性失败</string>
 
+    <string name="zhaopian">照片</string>
+    <string name="paizhao">拍照</string>
+    <string name="hongbao">红包</string>
+    <string name="mingpian">好友名片</string>
+
 </resources>

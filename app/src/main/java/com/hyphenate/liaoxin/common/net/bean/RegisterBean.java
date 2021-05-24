@@ -8,6 +8,7 @@ public class RegisterBean extends BaseRequestBean implements Serializable {
     public String code;
     public String nickName;
     public String password;
+    public String cover;
 
     @Override
     public String toString() {

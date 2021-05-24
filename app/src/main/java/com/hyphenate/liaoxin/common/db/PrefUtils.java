@@ -157,12 +157,11 @@ public class PrefUtils {
 
     /**
      * @param context
-     * @param p
      * @description 清除所有存储
      */
-    public static void clearPreference(Context context,
-                                       final SharedPreferences p) {
-        final Editor editor = p.edit();
+    public static void clearPreference(Context context) {
+        final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        final Editor editor = settings.edit();
         editor.clear();
         editor.commit();
     }

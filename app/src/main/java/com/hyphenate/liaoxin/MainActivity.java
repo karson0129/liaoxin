@@ -19,6 +19,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.gson.Gson;
+import com.hyphenate.EMContactListener;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMUserInfo;
@@ -30,8 +32,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hyphenate.liaoxin.common.constant.DemoConstant;
+import com.hyphenate.liaoxin.common.constant.UserConstant;
+import com.hyphenate.liaoxin.common.db.PrefUtils;
 import com.hyphenate.liaoxin.common.enums.SearchType;
 import com.hyphenate.liaoxin.common.livedatas.LiveDataBus;
+import com.hyphenate.liaoxin.common.net.bean.HuanXinBean;
+import com.hyphenate.liaoxin.common.net.callback.ResultCallBack;
+import com.hyphenate.liaoxin.common.net.client.HttpURL;
+import com.hyphenate.liaoxin.common.net.client.HttpUtils;
+import com.hyphenate.liaoxin.common.net.request.UserInfoRequest;
 import com.hyphenate.liaoxin.common.permission.PermissionsManager;
 import com.hyphenate.liaoxin.common.permission.PermissionsResultAction;
 import com.hyphenate.liaoxin.common.utils.PreferenceManager;
@@ -58,9 +67,12 @@ import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.bean.ZxingConfig;
 import com.yzq.zxinglibrary.common.Constant;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+
+import okhttp3.Call;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -273,6 +285,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
     protected void initListener() {
         super.initListener();
         navView.setOnNavigationItemSelectedListener(this);
+        initFriendListener();
     }
 
     @Override
@@ -298,6 +311,7 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
             }
             PushUtils.isRtcCall  = false;
         }
+        initUserInfo();
     }
 
     private void initViewModel() {
@@ -543,5 +557,102 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
         if(mCurrentFragment != null) {
             outState.putString("tag", mCurrentFragment.getTag());
         }
+    }
+
+    /**
+     *  获取用户信息
+     * */
+    private void initUserInfo(){
+        HttpUtils.getInstance().post(mContext,HttpURL.GET_CURRENT_CLIENT, "", new ResultCallBack() {
+
+            @Override
+            public void onSuccessResponse(Call call, String str) {
+                Log.i(TAG,"自己的用户信息:"+str);
+                UserInfoRequest request = new Gson().fromJson(str,UserInfoRequest.class);
+                PrefUtils.setString(mContext, UserConstant.ClientId,request.data.clientId);
+                upUserInfo(request.data.clientId);
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e, String str) {
+                super.onFailure(call, e,str);
+            }
+        });
+    }
+
+    /**
+     * 上传到环信里面
+     * */
+    private void upUserInfo(String str){
+        HuanXinBean bean = new HuanXinBean();
+        bean.clientId = str;
+        EMClient.getInstance().userInfoManager().updateOwnInfoByAttribute(EMUserInfoType.EXT, new Gson().toJson(bean), new EMValueCallBack<String>() {
+            @Override
+            public void onSuccess(String value) {
+                EMLog.d(TAG, "updateOwnInfoByAttribute :" + value);
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+                EMLog.d(TAG, "updateOwnInfoByAttribute  error:" + error + " errorMsg:" + errorMsg);
+            }
+        });
+    }
+
+    /***
+     * 注册
+     * 应用通过此接口设置回调，获得联系人变化
+     */
+    private void initFriendListener(){
+        EMClient.getInstance().contactManager().setContactListener(new EMContactListener() {
+
+            /**
+             * 收到好友邀请
+             * @param username 发起加为好友用户的名称
+             * @param reason   对方发起好友邀请时发出的文字性描述
+             */
+            @Override
+            public void onContactInvited(String username, String reason) {
+                //收到好友邀请
+            }
+
+
+            /**
+             * 好友请求被同意
+             * @param username
+             */
+            @Override
+            public void onFriendRequestAccepted(String username) {
+
+            }
+
+
+            /**
+             * 好友请求被拒绝
+             * @param username
+             */
+            @Override
+            public void onFriendRequestDeclined(String username) {
+
+            }
+
+            /**
+             * 被删除时回调此方法
+             * @param username 删除的联系人
+             */
+            @Override
+            public void onContactDeleted(String username) {
+                //被删除时回调此方法
+            }
+
+            /**
+             * 增加联系人时回调此方法
+             * @param username 增加的联系人
+             */
+            @Override
+            public void onContactAdded(String username) {
+                //增加了联系人时回调此方法
+            }
+        });
     }
 }
