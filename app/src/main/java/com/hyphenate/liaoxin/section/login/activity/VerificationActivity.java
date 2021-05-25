@@ -55,6 +55,8 @@ public class VerificationActivity extends BaseInitActivity implements EaseTitleB
 
     private LoginFragmentViewModel mFragmentViewModel;
 
+    private String mCode;
+
     public static void startAction(Context context, RegisterBean codeRequest) {
         Intent intent = new Intent(context, VerificationActivity.class);
         intent.putExtra(Request,codeRequest);
@@ -136,19 +138,13 @@ public class VerificationActivity extends BaseInitActivity implements EaseTitleB
             public void inputComplete(String code) {
 
                 //回调进入 Activity
-                if (!TextUtils.isEmpty(request.code) && code.equals(request.code)) {
+                if (code.length() == 4) {
+                    mCode = code;
                     //激活成功
                     ToastUtils.showSuccessToast("验证码正确");
                     activationCode.showTip(false, "");
-//                    SetPasswordActivity.startAction(mContext,request);
-//                    finish();
                     loginByPhone();
-                } else {
-                    //激活失败
-                    ToastUtils.showFailToast("验证码有误");
-                    activationCode.showTip(true, "验证码有误");
                 }
-
             }
         });
     }
@@ -160,7 +156,7 @@ public class VerificationActivity extends BaseInitActivity implements EaseTitleB
         showLoading();
         LoginByPhoneBean bean = new LoginByPhoneBean();
         bean.telephone = request.telephone;
-        bean.code = request.code;
+        bean.code = mCode;
         HttpUtils.getInstance().post(mContext, HttpURL.LOGIN_BY_CODE, new Gson().toJson(bean), new ResultCallBack() {
             @Override
             public void onSuccessResponse(Call call, String str) {

@@ -68,4 +68,9 @@ public class HttpURL {
     //获取当前登录客户的银行卡
     public final static String GET_CLIENT_BANKS = SERVER_ADDRESS + "/api/Bank/GetClientBanks";
 
+    //设置好友备注
+    public final static String SET_FRIEND_NICKNAME = SERVER_ADDRESS + "/api/ClientRelation/SetFriendNickName";
+
+    //陌生人(有可能已经是好友/黑名单)详细
+    public final static String STRANGER_DETAIL = SERVER_ADDRESS + "/api/ClientRelation/ClientStrangerDetail";
 }

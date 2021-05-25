@@ -14,7 +14,7 @@ public class SearchRequest {
         public String huanxinId;
         public String liaoxinNumber;
         public String cover;
-        public String friendShipType;
+        public int friendShipType;
         public String nickName;
 
 
@@ -50,13 +50,6 @@ public class SearchRequest {
             this.cover = cover;
         }
 
-        public String getFriendShipType() {
-            return friendShipType;
-        }
-
-        public void setFriendShipType(String friendShipType) {
-            this.friendShipType = friendShipType;
-        }
 
         public String getNickName() {
             return nickName;

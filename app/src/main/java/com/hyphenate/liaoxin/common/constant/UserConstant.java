@@ -26,4 +26,9 @@ public interface UserConstant {
      * 用户头像
      * */
     String Cover = "liaoxin_Cover";
+
+    /**
+     * 设置 支付密码
+     * */
+    String isCoinPassword = "liaoxin_isSetCoinPassword";
 }

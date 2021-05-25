@@ -552,6 +552,12 @@
         <activity android:name=".section.addfriend.AddressBookActivity"></activity>
         <!--  红包 单聊      -->
         <activity android:name=".section.chat.activity.SingleRedEnvelopeActivity"></activity>
+        <!--  申请添加好友      -->
+        <activity android:name=".section.contact.activity.SendAddFriendActivity"></activity>
+        <!--  设置好友备注      -->
+        <activity android:name=".section.contact.activity.SetFriendNameActivity"></activity>
+        <!--  更多      -->
+        <activity android:name=".section.contact.activity.MoveActivity"></activity>
     </application>
 
 </manifest>

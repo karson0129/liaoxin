@@ -24,9 +24,12 @@ import com.hyphenate.easeui.modules.chat.interfaces.IChatPrimaryMenu;
 import com.hyphenate.liaoxin.DemoHelper;
 import com.hyphenate.liaoxin.R;
 import com.hyphenate.liaoxin.common.constant.DemoConstant;
+import com.hyphenate.liaoxin.common.constant.UserConstant;
+import com.hyphenate.liaoxin.common.db.PrefUtils;
 import com.hyphenate.liaoxin.common.livedatas.LiveDataBus;
 import com.hyphenate.liaoxin.common.model.EmojiconExampleGroupData;
 import com.hyphenate.liaoxin.common.utils.ToastUtils;
+import com.hyphenate.liaoxin.common.widget.NoticeTitleDialog;
 import com.hyphenate.liaoxin.section.base.BaseActivity;
 import com.hyphenate.liaoxin.section.chat.activity.ForwardMessageActivity;
 import com.hyphenate.liaoxin.section.chat.activity.ImageGridActivity;
@@ -43,6 +46,7 @@ import com.hyphenate.liaoxin.section.dialog.FullEditDialogFragment;
 import com.hyphenate.liaoxin.section.contact.activity.ContactDetailActivity;
 import com.hyphenate.liaoxin.section.dialog.SimpleDialogFragment;
 import com.hyphenate.liaoxin.section.group.GroupHelper;
+import com.hyphenate.liaoxin.section.me.activity.PayManageActivity;
 import com.hyphenate.liaoxin.section.me.activity.UserDetailActivity;
 import com.hyphenate.easeui.constants.EaseConstant;
 import com.hyphenate.easeui.domain.EaseUser;
@@ -51,6 +55,7 @@ import com.hyphenate.easeui.modules.chat.interfaces.IChatExtendMenu;
 import com.hyphenate.easeui.modules.chat.interfaces.OnRecallMessageResultListener;
 import com.hyphenate.easeui.modules.menu.EasePopupWindowHelper;
 import com.hyphenate.easeui.modules.menu.MenuItemBean;
+import com.hyphenate.liaoxin.section.me.activity.WithdrawActivity;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.UriUtils;
 
@@ -66,6 +71,7 @@ public class ChatFragment extends EaseChatFragment implements OnRecallMessageRes
     private static final String[] calls = {"视频通话", "语音通话"};
     private OnFragmentInfoListener infoListener;
     private Dialog dialog;
+    private NoticeTitleDialog exitDialog;
 
     @Override
     public void initView() {
@@ -323,9 +329,43 @@ public class ChatFragment extends EaseChatFragment implements OnRecallMessageRes
                 this.getContext().startActivity(userCardIntent);
                 break;
             case R.id.extend_item_hongbao://红包
-                SingleRedEnvelopeActivity.actionStart(mContext);
+                //如果没有设置支付密码
+                if (PrefUtils.getBoolean(mContext, UserConstant.isCoinPassword,false)){
+                    SingleRedEnvelopeActivity.actionStart(mContext);
+                }else {
+                    showDialog();
+                }
                 break;
         }
+    }
+
+    /**
+     * 弹窗
+     * */
+    private void showDialog(){
+        if (exitDialog == null) {
+            exitDialog = new NoticeTitleDialog(mContext, "您还没设置支付密码，请设置");
+            exitDialog.setCancel("取消");
+            exitDialog.setAction("确认");
+            exitDialog.setType(1);
+            exitDialog.setOnItemClickListener(new NoticeTitleDialog.onItemClickListener() {
+                @Override
+                public void onActionClick() {
+                    if (exitDialog != null) {
+                        exitDialog.dismiss();
+                    }
+                    PayManageActivity.actionStart(mContext);
+                }
+
+                @Override
+                public void onCancelClick() {
+                    if (exitDialog != null) {
+                        exitDialog.dismiss();
+                    }
+                }
+            });
+        }
+        exitDialog.show();
     }
 
     @Override

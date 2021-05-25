@@ -39,6 +39,6 @@
             android:layout_marginTop="20dip"
             android:textColor="#fff"
             android:text="@string/save"
-            android:background="@drawable/demo_button_login_bg" />
+            android:background="@drawable/shape_ride_8_0189ff" />
     </LinearLayout>
 </LinearLayout>

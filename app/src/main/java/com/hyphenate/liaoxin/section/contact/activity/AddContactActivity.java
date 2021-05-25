@@ -13,10 +13,12 @@ import com.google.gson.Gson;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMUserInfo;
+import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.liaoxin.R;
 import com.hyphenate.liaoxin.common.db.DemoDbHelper;
 import com.hyphenate.liaoxin.common.enums.SearchType;
 import com.hyphenate.liaoxin.common.interfaceOrImplement.OnResourceParseCallback;
+import com.hyphenate.liaoxin.common.net.bean.HuanXinBean;
 import com.hyphenate.liaoxin.common.net.bean.SearchBean;
 import com.hyphenate.liaoxin.common.net.callback.ResultCallBack;
 import com.hyphenate.liaoxin.common.net.client.HttpURL;
@@ -27,6 +29,7 @@ import com.hyphenate.liaoxin.common.utils.PreferenceManager;
 import com.hyphenate.liaoxin.common.utils.ToastUtils;
 import com.hyphenate.liaoxin.section.contact.adapter.AddContactAdapter;
 import com.hyphenate.liaoxin.section.contact.viewmodels.AddContactViewModel;
+import com.hyphenate.liaoxin.section.me.activity.UserDetailActivity;
 import com.hyphenate.liaoxin.section.search.SearchActivity;
 import com.hyphenate.easeui.adapter.EaseBaseRecyclerViewAdapter;
 import com.hyphenate.easeui.domain.EaseUser;
@@ -157,10 +160,35 @@ public class AddContactActivity extends SearchActivity implements EaseTitleBar.O
     @Override
     protected void onChildItemClick(View view, int position) {
         // 跳转到好友页面
-        String item = (String) adapter.getItem(position);
-        EaseUser user = new EaseUser(item);
-        ContactDetailActivity.actionStart(mContext, user, false);
+//        String item = (String) adapter.getItem(position);
+//        EaseUser user = new EaseUser(item);
+        EaseUser user = (EaseUser) adapter.getItem(position);
+        if (user.getUsername().toLowerCase().equals(EMClient.getInstance().getCurrentUser().toLowerCase())){
+            UserDetailActivity.actionStart(mContext,null,null);
+        }else {
+            ContactDetailActivity.actionStart(mContext, user, isFri(user.getUsername().toLowerCase()));
+        }
     }
+
+    /**
+     * 判断是否是朋友
+     * */
+    private boolean isFri(String str){
+        boolean isFri = false;
+        try {
+            List<String> usernames = EMClient.getInstance().contactManager().getAllContactsFromServer();
+            for (String username : usernames) {
+                if (str.equals(username.toLowerCase())){
+                    isFri = true;
+                }
+            }
+        } catch (HyphenateException e) {
+            e.printStackTrace();
+        }
+        return isFri;
+    }
+
+
 
     @Override
     public void onBackPress(View view) {
@@ -189,7 +217,31 @@ public class AddContactActivity extends SearchActivity implements EaseTitleBar.O
                 try {
                     SearchRequest request = new Gson().fromJson(str,SearchRequest.class);
                     if (request != null){
-                        getSearchUserInfo(request.data.getHuanxinId().toLowerCase());
+//                        getSearchUserInfo(request.data.getHuanxinId().toLowerCase());
+
+                        EaseUser user = new EaseUser();
+                        if (!TextUtils.isEmpty(request.data.huanxinId)){
+                            user.setUsername(request.data.huanxinId.toLowerCase());
+                        }
+                        if (!TextUtils.isEmpty(request.data.nickName)){
+                            user.setNickname(request.data.nickName);
+                        }
+                        if (!TextUtils.isEmpty(request.data.cover)){
+                            user.setAvatar(request.data.cover);
+                        }
+//                        关系 0:好友 1:黑名单 2:陌生人
+                        user.setContact(request.data.friendShipType == 2? 3:request.data.friendShipType);
+                        if (!TextUtils.isEmpty(request.data.clientId)){
+                            HuanXinBean bean = new HuanXinBean();
+                            bean.clientId = request.data.clientId;
+                            user.setExt(new Gson().toJson(bean));
+                        }
+
+                        if (adapter.getData() != null && !adapter.getData().isEmpty()) {
+                            adapter.clearData();
+                        }
+                        adapter.addData(user);
+
                     }
                 }catch (Exception e){
                     ToastUtils.showFailToast("解析错误");
@@ -205,24 +257,25 @@ public class AddContactActivity extends SearchActivity implements EaseTitleBar.O
         });
     }
 
+    /**
+     * 获取环信信息
+     * */
     private void getSearchUserInfo(String uid){
         String[] userId = new String[1];
         userId[0] = uid;
-        EMUserInfo.EMUserInfoType[] userInfoTypes = new EMUserInfo.EMUserInfoType[4];
-        userInfoTypes[0] = EMUserInfo.EMUserInfoType.NICKNAME;
-        userInfoTypes[1] = EMUserInfo.EMUserInfoType.AVATAR_URL;
-        userInfoTypes[2] = EMUserInfo.EMUserInfoType.GENDER;
-        userInfoTypes[3] = EMUserInfo.EMUserInfoType.SIGN;
-        EMClient.getInstance().userInfoManager().fetchUserInfoByAttribute(userId, userInfoTypes,new EMValueCallBack<Map<String, EMUserInfo>>() {
+        EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(userId,new EMValueCallBack<Map<String, EMUserInfo>>() {
             @Override
             public void onSuccess(Map<String, EMUserInfo> userInfos) {
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        EMUserInfo userInfo = userInfos.get(EMClient.getInstance().getCurrentUser());
+                        EMUserInfo userInfo = userInfos.get(uid);
 //                        EMUserInfo: {"avatarUrl":"","birth":"","email":"","ext":"","gender":0,"nickName":"","phoneNumber":"","signature":"","userId":"qsidzqgvtvhkayv"}
                         Log.i(TAG,"EMUserInfo: "+new Gson().toJson(userInfo));
 
                         EaseUser user = new EaseUser();
+                        if (!TextUtils.isEmpty(userInfo.getUserId())){
+                            user.setUsername(userInfo.getUserId());
+                        }
                         if (!TextUtils.isEmpty(userInfo.getNickName())){
                             user.setNickname(userInfo.getNickName());
                         }

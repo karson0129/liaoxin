@@ -1,18 +1,23 @@
 package com.hyphenate.liaoxin.section.contact.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMUserInfo;
@@ -26,6 +31,14 @@ import com.hyphenate.liaoxin.common.db.DemoDbHelper;
 import com.hyphenate.liaoxin.common.db.entity.EmUserEntity;
 import com.hyphenate.liaoxin.common.interfaceOrImplement.OnResourceParseCallback;
 import com.hyphenate.liaoxin.common.livedatas.LiveDataBus;
+import com.hyphenate.liaoxin.common.net.bean.HuanXinBean;
+import com.hyphenate.liaoxin.common.net.bean.SetFriendRemarkBean;
+import com.hyphenate.liaoxin.common.net.callback.ResultCallBack;
+import com.hyphenate.liaoxin.common.net.client.HttpURL;
+import com.hyphenate.liaoxin.common.net.client.HttpUtils;
+import com.hyphenate.liaoxin.common.utils.ImageLoad;
+import com.hyphenate.liaoxin.common.utils.ToastUtils;
+import com.hyphenate.liaoxin.common.widget.ArrowItemView;
 import com.hyphenate.liaoxin.section.base.BaseInitActivity;
 import com.hyphenate.liaoxin.section.chat.activity.ChatActivity;
 import com.hyphenate.liaoxin.section.dialog.DemoDialogFragment;
@@ -40,10 +53,19 @@ import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.hyphenate.easeui.widget.EaseTitleBar;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.Call;
+
 public class ContactDetailActivity extends BaseInitActivity implements EaseTitleBar.OnBackPressListener, View.OnClickListener {
+
+    private String TAG = "ContactDetailActivity";
+
+    private int AddFriend = 1002;
+    private int SetFriend = 1003;
+
     private EaseTitleBar mEaseTitleBar;
     private EaseImageView mAvatarUser;
     private TextView mTvName;
@@ -53,6 +75,11 @@ public class ContactDetailActivity extends BaseInitActivity implements EaseTitle
     private TextView mBtnVideo;
     private TextView mBtnAddContact;
     private TextView mBtnRemoveBlack;
+    private TextView tvNum;
+    private LinearLayout itemQianming;
+    private TextView tvQianming;
+    private ArrowItemView itemBeizhu;
+    private ArrowItemView itemMove;
     private Group mGroupFriend;
 
     private EaseUser mUser;
@@ -63,6 +90,11 @@ public class ContactDetailActivity extends BaseInitActivity implements EaseTitle
     private ContactBlackViewModel blackViewModel;
     private EMUserInfo userInfo;
     private LiveDataBus contactChangeLiveData;
+
+    /**
+     * ID
+     * */
+    private String clientId;
 
     public static void actionStart(Context context, EaseUser user) {
         Intent intent = new Intent(context, ContactDetailActivity.class);
@@ -139,6 +171,11 @@ public class ContactDetailActivity extends BaseInitActivity implements EaseTitle
         mBtnAddContact = findViewById(R.id.btn_add_contact);
         mGroupFriend = findViewById(R.id.group_friend);
         mBtnRemoveBlack = findViewById(R.id.btn_remove_black);
+        tvNum = findViewById(R.id.tv_num);//显示聊信id
+        itemQianming = findViewById(R.id.item_qianming);//个性签名
+        itemBeizhu = findViewById(R.id.item_beizhu);//备注
+        tvQianming = findViewById(R.id.tv_qianming);//设置个性签名
+        itemMove = findViewById(R.id.item_move);//更多信息
 
         if(mIsFriend) {
             mGroupFriend.setVisibility(View.VISIBLE);
@@ -152,7 +189,13 @@ public class ContactDetailActivity extends BaseInitActivity implements EaseTitle
                 invalidateOptionsMenu();
             }
         }else {
+            //不是好友
+            itemBeizhu.setVisibility(View.GONE);
             mGroupFriend.setVisibility(View.GONE);
+            itemMove.setVisibility(View.GONE);
+            mBtnChat.setVisibility(View.GONE);
+            mBtnVoice.setVisibility(View.GONE);
+            mBtnVideo.setVisibility(View.GONE);
             mBtnAddContact.setVisibility(View.VISIBLE);
         }
     }
@@ -167,13 +210,16 @@ public class ContactDetailActivity extends BaseInitActivity implements EaseTitle
         mBtnVideo.setOnClickListener(this);
         mBtnAddContact.setOnClickListener(this);
         mBtnRemoveBlack.setOnClickListener(this);
+        itemBeizhu.setOnClickListener(this);
+        itemMove.setOnClickListener(this);
     }
 
     @Override
     protected void initData() {
         super.initData();
         contactChangeLiveData = LiveDataBus.get();
-        getDetailInfo();
+//        getDetailInfo();
+        getMyDetailInfo();
         viewModel = new ViewModelProvider(this).get(ContactDetailViewModel.class);
         viewModel.blackObservable().observe(this, response -> {
             parseResource(response, new OnResourceParseCallback<Boolean>() {
@@ -256,13 +302,70 @@ public class ContactDetailActivity extends BaseInitActivity implements EaseTitle
                 EaseCallKit.getInstance().startSingleCall(EaseCallType.SINGLE_VIDEO_CALL,mUser.getUsername(),null);
                 break;
             case R.id.btn_add_contact :
-                addContactViewModel.addContact(mUser.getUsername(), getResources().getString(R.string.em_add_contact_add_a_friend));
+//                addContactViewModel.addContact(mUser.getUsername(), getResources().getString(R.string.em_add_contact_add_a_friend));
+                addContact();
                 break;
             case R.id.btn_remove_black://从黑名单中移除
                 removeBlack();
                 break;
+            case R.id.item_beizhu://备注
+                setRamek();
+                break;
+            case R.id.item_move://更多信息
+                MoveActivity.actionStart(mContext,clientId);
+                break;
         }
     }
+
+    /**
+     * 添加好友
+     * */
+    private void addContact(){
+        Intent intent = new Intent(mContext,SendAddFriendActivity.class);
+        startActivityForResult(intent,AddFriend);
+    }
+
+    private void setRamek(){
+        Intent intent = new Intent(mContext,SetFriendNameActivity.class);
+        startActivityForResult(intent,SetFriend);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AddFriend && resultCode == Activity.RESULT_OK){
+            String hint = data.getStringExtra("hint");
+            addContactViewModel.addContact(mUser.getUsername(), hint);
+        }else if (requestCode == SetFriend && resultCode == Activity.RESULT_OK){
+            String beizhu = data.getStringExtra("beizhu");
+            setFriendBeizhu(beizhu);
+        }
+    }
+
+    /**
+     * 设置好友备注
+     * */
+    private void setFriendBeizhu(String str){
+        showLoading();
+        SetFriendRemarkBean bean = new SetFriendRemarkBean();
+        bean.clientId = clientId;
+        bean.remark = str;
+        Log.i(TAG,"参数："+new Gson().toJson(bean));
+        HttpUtils.getInstance().post(mContext, HttpURL.SET_FRIEND_NICKNAME, new Gson().toJson(bean), new ResultCallBack() {
+            @Override
+            public void onSuccessResponse(Call call, String str) {
+                dismissLoading();
+                ToastUtils.showToast("设置成功");
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e, String str) {
+                dismissLoading();
+                super.onFailure(call, e, str);
+            }
+        });
+    }
+
 
     private void removeBlack() {
         new SimpleDialogFragment.Builder(mContext)
@@ -284,6 +387,7 @@ public class ContactDetailActivity extends BaseInitActivity implements EaseTitle
         if(isSelf){
             userId[0] = EMClient.getInstance().getCurrentUser();
         }
+
         EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(userId, new EMValueCallBack<Map<String, EMUserInfo>>() {
             @Override
             public void onSuccess(Map<String, EMUserInfo> userInfos) {
@@ -301,7 +405,20 @@ public class ContactDetailActivity extends BaseInitActivity implements EaseTitle
                             mTvName.setText(mUser.getUsername());
                         }
                         if (userInfo != null && userInfo.getAvatarUrl() != null && userInfo.getAvatarUrl().length() > 0) {
-                            Glide.with(mContext).load(userInfo.getAvatarUrl()).placeholder(R.drawable.em_login_logo).into(mAvatarUser);
+//                            Glide.with(mContext).load(userInfo.getAvatarUrl()).placeholder(R.drawable.em_login_logo).into(mAvatarUser);
+                            ImageLoad.into(mContext,userInfo.getAvatarUrl(),0.4f,mAvatarUser);
+                        }
+
+                        if (userInfo != null && userInfo.getExt() != null){
+                            try {
+                                String ext = userInfo.getExt();
+                                HuanXinBean bean = new Gson().fromJson(ext,HuanXinBean.class);
+                                if (bean != null){
+                                    clientId = bean.clientId;
+                                }
+                            }catch (Exception e){
+                                ToastUtils.showToast("解析错误");
+                            }
                         }
                         //更新本地数据库
                         warpEMUserInfo(userInfo);
@@ -318,6 +435,36 @@ public class ContactDetailActivity extends BaseInitActivity implements EaseTitle
                 });
             }
         });
+    }
+
+    private void getMyDetailInfo(){
+        userInfo = new EMUserInfo();
+
+        userInfo.setUserId(mUser.getUsername());
+        if (mUser != null && mUser.getNickname() != null && mUser.getNickname().length() > 0) {
+            mTvName.setText(mUser.getNickname());
+            userInfo.setNickName(mUser.getNickname());
+        }else{
+            mTvName.setText(mUser.getUsername());
+        }
+        if (mUser != null && mUser.getAvatar() != null && mUser.getAvatar().length() > 0) {
+            ImageLoad.into(mContext,mUser.getAvatar(),0.4f,mAvatarUser);
+            userInfo.setAvatarUrl(mUser.getAvatar());
+        }
+        if (mUser != null && mUser.getExt() != null){
+            userInfo.setExt(mUser.getExt());
+            try {
+                String ext = mUser.getExt();
+                HuanXinBean bean = new Gson().fromJson(ext,HuanXinBean.class);
+                if (bean != null){
+                    clientId = bean.clientId;
+                }
+            }catch (Exception e){
+                ToastUtils.showToast("解析错误");
+            }
+        }
+        //更新本地数据库
+        warpEMUserInfo(userInfo);
     }
 
     private void warpEMUserInfo(EMUserInfo userInfo){

@@ -287,11 +287,12 @@ public class UserDetailActivity extends BaseInitActivity implements View.OnClick
     private void intSelfDate(){
         String[] userId = new String[1];
         userId[0] = EMClient.getInstance().getCurrentUser();
-        EMUserInfoType [] userInfoTypes = new EMUserInfoType[4];
+        EMUserInfoType [] userInfoTypes = new EMUserInfoType[5];
         userInfoTypes[0] = EMUserInfoType.NICKNAME;
         userInfoTypes[1] = EMUserInfoType.AVATAR_URL;
         userInfoTypes[2] = EMUserInfoType.GENDER;
         userInfoTypes[3] = EMUserInfoType.SIGN;
+        userInfoTypes[4] = EMUserInfoType.EXT;
         EMClient.getInstance().userInfoManager().fetchUserInfoByAttribute(userId, userInfoTypes,new EMValueCallBack<Map<String, EMUserInfo>>() {
             @Override
             public void onSuccess(Map<String, EMUserInfo> userInfos) {
