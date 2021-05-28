@@ -112,6 +112,7 @@ public class UserInfoRequest {
         public boolean showMessageNotication;
         public boolean appOpenWhileSound;
         public boolean openWhileShake;
+        public boolean isRealAuth;
     }
 
 

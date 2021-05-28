@@ -23,6 +23,8 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMUserInfo;
 import com.hyphenate.liaoxin.R;
 import com.hyphenate.liaoxin.common.constant.DemoConstant;
+import com.hyphenate.liaoxin.common.constant.UserConstant;
+import com.hyphenate.liaoxin.common.db.PrefUtils;
 import com.hyphenate.liaoxin.common.livedatas.LiveDataBus;
 import com.hyphenate.liaoxin.common.net.callback.ResultCallBack;
 import com.hyphenate.liaoxin.common.net.client.HttpURL;
@@ -237,6 +239,7 @@ public class UserDetailActivity extends BaseInitActivity implements View.OnClick
         Uri uri = data.getData();
         String filePath = PictureUtils.getRealFilePath(mContext, uri);
         Log.i(TAG, "相册数据：" + filePath);
+//        ImageLoad.into(mContext,filePath,0.5f,headImageView);
         showLoading();
         HttpUtils.getInstance().uploadImage(mContext, HttpURL.UPLOAD_IMAGE, filePath, new ResultCallBack() {
 
@@ -342,7 +345,6 @@ public class UserDetailActivity extends BaseInitActivity implements View.OnClick
     protected void addLiveDataObserver() {
         LiveDataBus.get().with(DemoConstant.AVATAR_CHANGE, EaseEvent.class).observe(this, event -> {
             if (event != null) {
-//                Glide.with(mContext).load(HttpURL.PICTURE_URL + event.message).placeholder(R.drawable.em_login_logo).into(headImageView);
                 ImageLoad.into(mContext,event.message,0.5f,headImageView);
             }
         });

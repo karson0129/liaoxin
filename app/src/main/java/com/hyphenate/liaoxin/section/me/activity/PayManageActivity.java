@@ -7,7 +7,10 @@ import android.view.View;
 
 import com.hyphenate.easeui.widget.EaseTitleBar;
 import com.hyphenate.liaoxin.R;
+import com.hyphenate.liaoxin.common.constant.UserConstant;
+import com.hyphenate.liaoxin.common.db.PrefUtils;
 import com.hyphenate.liaoxin.common.widget.ArrowItemView;
+import com.hyphenate.liaoxin.common.widget.NoticeTitleDialog;
 import com.hyphenate.liaoxin.section.base.BaseInitActivity;
 
 /**
@@ -59,6 +62,15 @@ public class PayManageActivity extends BaseInitActivity implements EaseTitleBar.
     @Override
     protected void initData() {
         super.initData();
+        if (PrefUtils.getBoolean(mContext, UserConstant.isRealAuth,false)){
+            itemRenzheng.getTvContent().setText("已认证");
+            itemRenzheng.getTvContent().setTextColor(mContext.getResources().getColor(R.color.color_AAAAAA));
+        }
+        if (PrefUtils.getBoolean(mContext,UserConstant.isCoinPassword,false)){
+            itemChangePassword.getTvTitle().setText("修改支付密码");
+        }else {
+            itemChangePassword.getTvTitle().setText("设置支付密码");
+        }
     }
 
 
@@ -71,18 +83,49 @@ public class PayManageActivity extends BaseInitActivity implements EaseTitleBar.
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.item_renzheng://认证
-                CertificationActivity.actionStart(mContext);
+                if (!PrefUtils.getBoolean(mContext, UserConstant.isRealAuth,false)){
+                    CertificationActivity.actionStart(mContext);
+                }
                 break;
             case R.id.item_change_password://修改密码
-                SetPayPasswordActivity.actionStart(mContext);
-
+                if (!PrefUtils.getBoolean(mContext, UserConstant.isRealAuth,false)){
+                    showDialog();
+                    return;
+                }
+                if (PrefUtils.getBoolean(mContext,UserConstant.isCoinPassword,false)){
+                    ChangePasswordActivity.actionStart(mContext);
+                }else {
+                    SetPayPasswordActivity.actionStart(mContext);
+                }
                 break;
             case R.id.item_wangji_password://忘记密码
-
+                ForgetPasswordActivity.actionStart(mContext);
                 break;
             case R.id.item_tuikuan://退款
 
                 break;
         }
+    }
+
+
+    private void showDialog(){
+        NoticeTitleDialog dialog = new NoticeTitleDialog(mContext,"设置支付密码前先需实名认证，才能 设置进行支付和提现操作");
+        dialog.setTitle("提示");
+        dialog.setAction("前往认证");
+        dialog.setCancel("取消");
+        dialog.setType(1);
+        dialog.setOnItemClickListener(new NoticeTitleDialog.onItemClickListener() {
+            @Override
+            public void onActionClick() {
+                CertificationActivity.actionStart(mContext);
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onCancelClick() {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 }

@@ -5,45 +5,36 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.hyphenate.easeui.widget.EaseTitleBar;
 import com.hyphenate.liaoxin.R;
-import com.hyphenate.liaoxin.common.net.bean.CoinPssswordBean;
-import com.hyphenate.liaoxin.common.net.callback.ResultCallBack;
-import com.hyphenate.liaoxin.common.net.client.HttpURL;
-import com.hyphenate.liaoxin.common.net.client.HttpUtils;
-import com.hyphenate.liaoxin.common.utils.ToastUtils;
-import com.hyphenate.liaoxin.common.widget.ActivationCodeBox;
 import com.hyphenate.liaoxin.common.widget.PasswordCodeBox;
 import com.hyphenate.liaoxin.section.base.BaseInitActivity;
 
-import java.io.IOException;
+public class ForgetPasswordActivity1 extends BaseInitActivity implements EaseTitleBar.OnBackPressListener {
 
-import okhttp3.Call;
-
-/**
- * 设置支付密码
- */
-public class SetPayPasswordActivity extends BaseInitActivity implements EaseTitleBar.OnBackPressListener {
-
-    private String TAG = "SetPayPasswordActivity";
+    private String TAG = "ForgetPasswordActivity1";
 
     private EaseTitleBar titleBar;
     private PasswordCodeBox passwordCodeBox;
 
     private String mCode;
 
-    public static void actionStart(Context context) {
-        Intent starter = new Intent(context, SetPayPasswordActivity.class);
+    public static void actionStart(Context context,String mCode) {
+        Intent starter = new Intent(context, ForgetPasswordActivity1.class);
+        starter.putExtra("code",mCode);
         context.startActivity(starter);
     }
-
 
     @Override
     protected int getLayoutId() {
         return R.layout.activity_set_pay_password;
+    }
+
+    @Override
+    protected void initIntent(Intent intent) {
+        super.initIntent(intent);
+        mCode = getIntent().getStringExtra("code");
     }
 
     @Override
@@ -61,8 +52,8 @@ public class SetPayPasswordActivity extends BaseInitActivity implements EaseTitl
         passwordCodeBox.setInputCompleteListener(new PasswordCodeBox.InputCompleteListener() {
             @Override
             public void inputComplete(String code) {
-                if (!TextUtils.isEmpty(code) && code.length() >=6){
-                    AgreePasswordActivity.actionStart(mContext,code);
+                if (!TextUtils.isEmpty(code) && code.length() >= 6){
+                    ForgetPasswordActivity2.actionStart(mContext,mCode,code);
                     finish();
                 }
             }
@@ -78,5 +69,4 @@ public class SetPayPasswordActivity extends BaseInitActivity implements EaseTitl
     public void onBackPress(View view) {
         onBackPressed();
     }
-
 }

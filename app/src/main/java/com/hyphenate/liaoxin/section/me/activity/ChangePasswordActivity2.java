@@ -7,39 +7,33 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.hyphenate.easeui.widget.EaseTitleBar;
 import com.hyphenate.liaoxin.R;
-import com.hyphenate.liaoxin.common.net.bean.CoinPssswordBean;
-import com.hyphenate.liaoxin.common.net.callback.ResultCallBack;
-import com.hyphenate.liaoxin.common.net.client.HttpURL;
-import com.hyphenate.liaoxin.common.net.client.HttpUtils;
-import com.hyphenate.liaoxin.common.utils.ToastUtils;
-import com.hyphenate.liaoxin.common.widget.ActivationCodeBox;
 import com.hyphenate.liaoxin.common.widget.PasswordCodeBox;
 import com.hyphenate.liaoxin.section.base.BaseInitActivity;
 
-import java.io.IOException;
+public class ChangePasswordActivity2 extends BaseInitActivity implements EaseTitleBar.OnBackPressListener {
 
-import okhttp3.Call;
-
-/**
- * 设置支付密码
- */
-public class SetPayPasswordActivity extends BaseInitActivity implements EaseTitleBar.OnBackPressListener {
-
-    private String TAG = "SetPayPasswordActivity";
+    private String TAG = "ChangePasswordActivity2";
 
     private EaseTitleBar titleBar;
     private PasswordCodeBox passwordCodeBox;
+    private TextView hint;
+    private TextView tv_name;
 
-    private String mCode;
+    private String mOldCode;
 
-    public static void actionStart(Context context) {
-        Intent starter = new Intent(context, SetPayPasswordActivity.class);
+    public static void actionStart(Context context,String oldCode) {
+        Intent starter = new Intent(context, ChangePasswordActivity2.class);
+        starter.putExtra("oldCode",oldCode);
         context.startActivity(starter);
     }
 
+    @Override
+    protected void initIntent(Intent intent) {
+        super.initIntent(intent);
+        mOldCode = getIntent().getStringExtra("oldCode");
+    }
 
     @Override
     protected int getLayoutId() {
@@ -51,7 +45,8 @@ public class SetPayPasswordActivity extends BaseInitActivity implements EaseTitl
         super.initView(savedInstanceState);
         titleBar = findViewById(R.id.title_bar);
         passwordCodeBox = findViewById(R.id.activationCode);
-
+        hint = findViewById(R.id.hint);
+        tv_name = findViewById(R.id.tv_name);
     }
 
     @Override
@@ -61,8 +56,8 @@ public class SetPayPasswordActivity extends BaseInitActivity implements EaseTitl
         passwordCodeBox.setInputCompleteListener(new PasswordCodeBox.InputCompleteListener() {
             @Override
             public void inputComplete(String code) {
-                if (!TextUtils.isEmpty(code) && code.length() >=6){
-                    AgreePasswordActivity.actionStart(mContext,code);
+                if (!TextUtils.isEmpty(code) && code.length() >= 6){
+                    ChangePasswordActivity3.actionStart(mContext,mOldCode,code);
                     finish();
                 }
             }
@@ -78,5 +73,4 @@ public class SetPayPasswordActivity extends BaseInitActivity implements EaseTitl
     public void onBackPress(View view) {
         onBackPressed();
     }
-
 }

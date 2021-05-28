@@ -29,7 +29,7 @@
                 android:textSize="16dp"
                 android:textColor="#292929"
                 android:layout_marginTop="18dp"
-                android:text="123"
+                android:text="提示"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -75,12 +75,19 @@
 
                 </TextView>
 
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="44dp"
+                    android:background="#EDEDED">
+
+                </View>
+
                 <TextView
                     android:id="@+id/tv_action"
                     android:background="@drawable/shape_ride_white_4dp"
                     android:gravity="center"
                     android:textSize="14dp"
-                    android:textColor="@color/white"
+                    android:textColor="#0189ff"
                     android:text="123"
                     android:layout_weight="1"
                     android:layout_width="0dp"

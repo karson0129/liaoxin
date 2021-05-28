@@ -564,6 +564,18 @@
         <activity android:name=".section.me.activity.CertificationSuccessActivity"></activity>
         <!--  设置支付密码      -->
         <activity android:name=".section.me.activity.SetPayPasswordActivity"></activity>
+        <!--  确定支付密码      -->
+        <activity android:name=".section.me.activity.AgreePasswordActivity"></activity>
+        <!--  修改支付密码      -->
+        <activity android:name=".section.me.activity.ChangePasswordActivity"></activity>
+        <activity android:name=".section.me.activity.ChangePasswordActivity2"></activity>
+        <activity android:name=".section.me.activity.ChangePasswordActivity3"></activity>
+        <!--  忘记支付密码      -->
+        <activity android:name=".section.me.activity.ForgetPasswordActivity"></activity>
+        <activity android:name=".section.me.activity.ForgetPasswordActivity1"></activity>
+        <activity android:name=".section.me.activity.ForgetPasswordActivity2"></activity>
+        <!--  银行      -->
+        <activity android:name=".section.me.activity.BankActivity"></activity>
     </application>
 
 </manifest>

@@ -24,6 +24,7 @@ public class PayActivity extends BaseInitActivity implements  EaseTitleBar.OnBac
     private TextView tvChongZhi;//充值
     private TextView tvTiXian;//体现
     private LinearLayout linShouKuanMa;//收款码
+    private LinearLayout linYinhangka;//银行卡
 
     public static void actionStart(Context context) {
         Intent starter = new Intent(context, PayActivity.class);
@@ -49,6 +50,7 @@ public class PayActivity extends BaseInitActivity implements  EaseTitleBar.OnBac
         tvChongZhi = findViewById(R.id.tv_chongzhi);
         tvTiXian = findViewById(R.id.tv_tixian);
         linShouKuanMa = findViewById(R.id.tv_shoukuanma);
+        linYinhangka = findViewById(R.id.tv_yinhangka);
         titleBar.setRightImageResource(R.drawable.home_details);
 
     }
@@ -62,6 +64,7 @@ public class PayActivity extends BaseInitActivity implements  EaseTitleBar.OnBac
         tvChongZhi.setOnClickListener(this);
         tvTiXian.setOnClickListener(this);
         linShouKuanMa.setOnClickListener(this);
+        linYinhangka.setOnClickListener(this);
         titleBar.getRightImage().setOnClickListener(this);
     }
 
@@ -92,6 +95,9 @@ public class PayActivity extends BaseInitActivity implements  EaseTitleBar.OnBac
                 break;
             case R.id.tv_shoukuanma://收款码
 
+                break;
+            case R.id.tv_yinhangka://银行卡
+                BankActivity.actionStart(mContext);
                 break;
             case R.id.right_image:
                 PayManageActivity.actionStart(mContext);

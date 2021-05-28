@@ -570,7 +570,9 @@ public class MainActivity extends BaseInitActivity implements BottomNavigationVi
                 Log.i(TAG,"自己的用户信息:"+str);
                 UserInfoRequest request = new Gson().fromJson(str,UserInfoRequest.class);
                 PrefUtils.setString(mContext, UserConstant.ClientId,request.data.clientId);
+                PrefUtils.setString(mContext, UserConstant.Phone,request.data.telephone);
                 PrefUtils.setBoolean(mContext, UserConstant.isCoinPassword,request.data.isSetCoinPassword);
+                PrefUtils.setBoolean(mContext, UserConstant.isRealAuth,request.data.isRealAuth);
                 upUserInfo(request.data.clientId);
             }
 

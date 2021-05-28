@@ -345,6 +345,7 @@ public class ChatFragment extends EaseChatFragment implements OnRecallMessageRes
     private void showDialog(){
         if (exitDialog == null) {
             exitDialog = new NoticeTitleDialog(mContext, "您还没设置支付密码，请设置");
+            exitDialog.setTitle("提示");
             exitDialog.setCancel("取消");
             exitDialog.setAction("确认");
             exitDialog.setType(1);

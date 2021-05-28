@@ -7,39 +7,26 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.hyphenate.easeui.widget.EaseTitleBar;
 import com.hyphenate.liaoxin.R;
-import com.hyphenate.liaoxin.common.net.bean.CoinPssswordBean;
-import com.hyphenate.liaoxin.common.net.callback.ResultCallBack;
-import com.hyphenate.liaoxin.common.net.client.HttpURL;
-import com.hyphenate.liaoxin.common.net.client.HttpUtils;
-import com.hyphenate.liaoxin.common.utils.ToastUtils;
-import com.hyphenate.liaoxin.common.widget.ActivationCodeBox;
 import com.hyphenate.liaoxin.common.widget.PasswordCodeBox;
 import com.hyphenate.liaoxin.section.base.BaseInitActivity;
 
-import java.io.IOException;
+public class ChangePasswordActivity extends BaseInitActivity implements EaseTitleBar.OnBackPressListener {
 
-import okhttp3.Call;
-
-/**
- * 设置支付密码
- */
-public class SetPayPasswordActivity extends BaseInitActivity implements EaseTitleBar.OnBackPressListener {
-
-    private String TAG = "SetPayPasswordActivity";
+    private String TAG = "ChangePasswordActivity";
 
     private EaseTitleBar titleBar;
     private PasswordCodeBox passwordCodeBox;
+    private TextView hint;
+    private TextView tv_name;
 
     private String mCode;
 
     public static void actionStart(Context context) {
-        Intent starter = new Intent(context, SetPayPasswordActivity.class);
+        Intent starter = new Intent(context, ChangePasswordActivity.class);
         context.startActivity(starter);
     }
-
 
     @Override
     protected int getLayoutId() {
@@ -51,7 +38,10 @@ public class SetPayPasswordActivity extends BaseInitActivity implements EaseTitl
         super.initView(savedInstanceState);
         titleBar = findViewById(R.id.title_bar);
         passwordCodeBox = findViewById(R.id.activationCode);
-
+        hint = findViewById(R.id.hint);
+        tv_name = findViewById(R.id.tv_name);
+        hint.setText("请输入支付密码，以验证身份");
+        tv_name.setText("修改支付密码");
     }
 
     @Override
@@ -61,8 +51,8 @@ public class SetPayPasswordActivity extends BaseInitActivity implements EaseTitl
         passwordCodeBox.setInputCompleteListener(new PasswordCodeBox.InputCompleteListener() {
             @Override
             public void inputComplete(String code) {
-                if (!TextUtils.isEmpty(code) && code.length() >=6){
-                    AgreePasswordActivity.actionStart(mContext,code);
+                if (!TextUtils.isEmpty(code) && code.length() >= 6){
+                    ChangePasswordActivity2.actionStart(mContext,code);
                     finish();
                 }
             }
