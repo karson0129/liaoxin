@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <com.hyphenate.easeui.widget.EaseTitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/em_common_title_bar_height"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleBarTitle="实名认证"
+        app:titleBarTitleTextSize="17dp"
+        android:background="@color/white"
+        app:titleBarDisplayHomeAsUpEnabled="true"
+        />
+
+    <TextView
+        android:id="@+id/hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_bar"
+        android:text="为确保您帐号的安全及正常使用，依据《网络安全法》相关要求，进行下一步操作需实名认证，感谢您的理解及支持!"
+        android:textColor="#AAAAAA"
+        android:textSize="13dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        android:layout_marginTop="20dp"
+        >
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_name"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/hint"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="真实姓名"
+        android:textColor="#292929"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        >
+
+    </TextView>
+
+    <EditText
+        android:id="@+id/et_name"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_name"
+        android:background="@color/white"
+        android:hint="请填写您的名字"
+        android:textSize="15dp"
+        android:textColor="#292929"
+        android:textColorHint="#AAAAAA"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+    </EditText>
+
+    <View
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_name"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        android:background="#F2F2F2"
+        >
+
+    </View>
+
+    <TextView
+        android:id="@+id/tv_code"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/line1"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="身份证号"
+        android:textColor="#292929"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        >
+
+    </TextView>
+
+    <EditText
+        android:id="@+id/et_code"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_code"
+        android:background="@color/white"
+        android:hint="请填写您的身份证号"
+        android:textSize="15dp"
+        android:textColor="#292929"
+        android:textColorHint="#AAAAAA"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+    </EditText>
+
+    <View
+        android:id="@+id/line2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_code"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        android:background="#F2F2F2"
+        >
+
+    </View>
+
+    <TextView
+        android:id="@+id/tv_update"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/line2"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="上传身份证照片"
+        android:textColor="#292929"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        >
+
+    </TextView>
+
+    <View
+        android:id="@+id/line3"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="1dp"
+        android:layout_height="1dp">
+
+    </View>
+
+    <ImageView
+        android:id="@+id/iv_zhengmian"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/line3"
+        app:layout_constraintTop_toBottomOf="@id/tv_update"
+        android:src="@drawable/idcard_reverse"
+        app:layout_constraintDimensionRatio="4:3"
+        android:layout_marginTop="10dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp">
+
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/iv_fanmian"
+        app:layout_constraintLeft_toLeftOf="@id/line3"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_update"
+        android:src="@drawable/idcard_positive"
+        app:layout_constraintDimensionRatio="4:3"
+        android:layout_marginTop="10dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp">
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/action"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@drawable/shape_ride_8_f2f2f2"
+        android:textColor="#AAAAAA"
+        android:gravity="center"
+        android:text="确认提交"
+        android:textSize="15dp"
+        >
+
+    </TextView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

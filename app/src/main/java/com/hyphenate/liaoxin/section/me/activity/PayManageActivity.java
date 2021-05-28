@@ -71,9 +71,10 @@ public class PayManageActivity extends BaseInitActivity implements EaseTitleBar.
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.item_renzheng://认证
-
+                CertificationActivity.actionStart(mContext);
                 break;
             case R.id.item_change_password://修改密码
+                SetPayPasswordActivity.actionStart(mContext);
 
                 break;
             case R.id.item_wangji_password://忘记密码
