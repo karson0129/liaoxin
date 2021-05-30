@@ -7,12 +7,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.gson.Gson;
+import com.hyphenate.EMValueCallBack;
+import com.hyphenate.chat.EMUserInfo;
 import com.hyphenate.easecallkit.EaseCallKit;
 import com.hyphenate.easecallkit.base.EaseCallType;
 
@@ -28,6 +32,8 @@ import com.hyphenate.liaoxin.common.constant.UserConstant;
 import com.hyphenate.liaoxin.common.db.PrefUtils;
 import com.hyphenate.liaoxin.common.livedatas.LiveDataBus;
 import com.hyphenate.liaoxin.common.model.EmojiconExampleGroupData;
+import com.hyphenate.liaoxin.common.net.bean.HuanXinBean;
+import com.hyphenate.liaoxin.common.utils.PreferenceManager;
 import com.hyphenate.liaoxin.common.utils.ToastUtils;
 import com.hyphenate.liaoxin.common.widget.NoticeTitleDialog;
 import com.hyphenate.liaoxin.section.base.BaseActivity;
@@ -59,6 +65,8 @@ import com.hyphenate.liaoxin.section.me.activity.WithdrawActivity;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.UriUtils;
 
+import java.util.Map;
+
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 
@@ -72,6 +80,8 @@ public class ChatFragment extends EaseChatFragment implements OnRecallMessageRes
     private OnFragmentInfoListener infoListener;
     private Dialog dialog;
     private NoticeTitleDialog exitDialog;
+
+    private String clientId;
 
     @Override
     public void initView() {
@@ -108,6 +118,44 @@ public class ChatFragment extends EaseChatFragment implements OnRecallMessageRes
             //设置菜单样式为不可用语音模式
         //    primaryMenu.setMenuShowType(EaseInputMenuStyle.ONLY_TEXT);
         //}
+        fetchSelfInfo();
+    }
+
+
+    private void fetchSelfInfo(){
+        String[] userId = new String[1];
+        userId[0] = conversationId;
+        EMUserInfo.EMUserInfoType[] userInfoTypes = new EMUserInfo.EMUserInfoType[3];
+        userInfoTypes[0] = EMUserInfo.EMUserInfoType.NICKNAME;
+        userInfoTypes[1] = EMUserInfo.EMUserInfoType.AVATAR_URL;
+        userInfoTypes[2] = EMUserInfo.EMUserInfoType.EXT;
+        EMClient.getInstance().userInfoManager().fetchUserInfoByAttribute(userId, userInfoTypes,new EMValueCallBack<Map<String, EMUserInfo>>() {
+            @Override
+            public void onSuccess(Map<String, EMUserInfo> userInfos) {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        EMUserInfo userInfo = userInfos.get(conversationId);
+                        if (userInfo != null){
+                            Log.i(TAG,"对面的参数：" + userInfo.getNickName() +" | ava:"+userInfo.getAvatarUrl()+" | ext:"+userInfo.getExt());
+
+                            if (!TextUtils.isEmpty(userInfo.getExt())){
+                                try {
+                                    HuanXinBean bean = new Gson().fromJson(userInfo.getExt(),HuanXinBean.class);
+                                    if (bean != null){
+                                        clientId = bean.clientId;
+                                    }
+                                }catch (Exception e){}
+                            }
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+                EMLog.e("MainActivity","fetchUserInfoByIds error:" + error + " errorMsg:" + errorMsg);
+            }
+        });
     }
 
     private void addItemMenuAction() {
@@ -331,7 +379,7 @@ public class ChatFragment extends EaseChatFragment implements OnRecallMessageRes
             case R.id.extend_item_hongbao://红包
                 //如果没有设置支付密码
                 if (PrefUtils.getBoolean(mContext, UserConstant.isCoinPassword,false)){
-                    SingleRedEnvelopeActivity.actionStart(mContext);
+                    SingleRedEnvelopeActivity.actionStart(mContext,clientId);
                 }else {
                     showDialog();
                 }

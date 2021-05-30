@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        >
+
+
+
+        <TextView
+            android:id="@+id/hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="您还没绑定银行卡\n添加银行卡，支付更畅通"
+            android:textColor="#909090"
+            android:textSize="15dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+
+        </TextView>
+
+        <ImageView
+            android:layout_width="148dp"
+            android:layout_height="141dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/hint"
+            android:layout_marginBottom="30dp"
+            android:src="@drawable/my_pay_bank_card_blank"
+            >
+
+        </ImageView>
+        
+        <TextView
+            android:id="@+id/action"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/hint"
+            android:layout_marginTop="30dp"
+            android:text="添加银行卡"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            android:background="@drawable/shape_ride_8_0189ff"
+            android:gravity="center"
+            android:paddingLeft="35dp"
+            android:paddingRight="35dp"
+            android:paddingTop="11dp"
+            android:paddingBottom="11dp"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp">
+
+        </TextView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>

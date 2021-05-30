@@ -16,10 +16,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.gson.Gson;
 import com.hyphenate.liaoxin.R;
 import com.hyphenate.liaoxin.common.net.callback.ResultCallBack;
 import com.hyphenate.liaoxin.common.net.client.HttpURL;
 import com.hyphenate.liaoxin.common.net.client.HttpUtils;
+import com.hyphenate.liaoxin.common.net.request.BankRequest;
+import com.hyphenate.liaoxin.common.utils.ToastUtils;
 
 import java.io.IOException;
 
@@ -93,6 +96,14 @@ public class CoinDialog extends Dialog implements View.OnClickListener {
             @Override
             public void onSuccessResponse(Call call, String str) {
                 Log.i(TAG,"银行:" + str);
+                try {
+                    BankRequest request = new Gson().fromJson(str,BankRequest.class);
+                    if (request != null){
+
+                    }
+                }catch (Exception e){
+                    ToastUtils.showToast("解析错误");
+                }
             }
 
             @Override

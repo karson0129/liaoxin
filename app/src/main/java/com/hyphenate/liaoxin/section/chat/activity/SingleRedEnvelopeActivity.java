@@ -37,8 +37,11 @@ public class SingleRedEnvelopeActivity extends BaseInitActivity implements EaseT
 
     private CoinDialog coinDialog;
 
-    public static void actionStart(Context context) {
+    private String oderClientId;
+
+    public static void actionStart(Context context,String oderClientId) {
         Intent intent = new Intent(context, SingleRedEnvelopeActivity.class);
+        intent.putExtra("oderClientId",oderClientId);
         context.startActivity(intent);
     }
 

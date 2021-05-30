@@ -73,4 +73,11 @@ public class HttpURL {
 
     //陌生人(有可能已经是好友/黑名单)详细
     public final static String STRANGER_DETAIL = SERVER_ADDRESS + "/api/ClientRelation/ClientStrangerDetail";
+
+    //获取系统银行
+    public final static String GET_SYSTEM_BANK = SERVER_ADDRESS + "/api/Bank/GetSystemBanks";
+
+    //绑定银行卡
+    public final static String BIND_BANK = SERVER_ADDRESS + "/api/Bank/BindClientBank";
+
 }

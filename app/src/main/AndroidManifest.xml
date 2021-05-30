@@ -576,6 +576,12 @@
         <activity android:name=".section.me.activity.ForgetPasswordActivity2"></activity>
         <!--  银行      -->
         <activity android:name=".section.me.activity.BankActivity"></activity>
+        <!--  添加银行卡      -->
+        <activity android:name=".section.me.activity.AddBankActivity"></activity>
+        <!--  选择银行卡      -->
+        <activity android:name=".section.me.activity.SelectBankActivity"></activity>
+        <!--  添加银行卡  输入密码      -->
+        <activity android:name=".section.me.activity.AddBankPasswordActivity"></activity>
     </application>
 
 </manifest>
